@@ -21,7 +21,7 @@ class MorphParent extends StatelessWidget {
       ),
     );
   }
-  
+
   void _morph() async {
     // TODO: Handle pushing morphChild screen.
     onMorphed();
