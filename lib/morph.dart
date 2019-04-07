@@ -1,2 +1,2 @@
 library morph;
-export './morph_list_view.dart';
+export './morph_scaffold/morph_scaffold.dart';
