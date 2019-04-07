@@ -50,6 +50,7 @@ class MorphScaffoldState extends State<MorphScaffold> with SingleTickerProviderS
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.fastOutSlowIn,
+      reverseCurve: Curves.fastOutSlowIn,
     ))
         ..addListener(() { setState(() {}); });
     _scale = Tween<double>(
@@ -58,19 +59,23 @@ class MorphScaffoldState extends State<MorphScaffold> with SingleTickerProviderS
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: Curves.fastOutSlowIn,
+      reverseCurve: Curves.fastOutSlowIn,
     ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: _opacity.value,
-      child: Transform.scale(
-        scale: _scale.value,
-        child: Scaffold(
-          appBar: widget.appBar,
-          body: widget.body,
-          bottomNavigationBar: widget.bottomNavigationBar,
+    return InheritedMorphScaffold(
+      data: this,
+      child: Opacity(
+        opacity: _opacity.value,
+        child: Transform.scale(
+          scale: _scale.value,
+          child: Scaffold(
+            appBar: widget.appBar,
+            body: widget.body,
+            bottomNavigationBar: widget.bottomNavigationBar,
+          ),
         ),
       ),
     );
