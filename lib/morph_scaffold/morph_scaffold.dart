@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import './inherited_morph_scaffold.dart';
 
@@ -5,18 +6,45 @@ class MorphScaffold extends StatefulWidget {
 
   MorphScaffold({
     this.appBar,
+    this.backgroundColor,
     this.body,
+    this.bottomSheet,
     this.bottomNavigationBar,
     this.scaffoldAnimationDuration = const Duration(milliseconds: 300),
+    this.drawer,
+    this.drawerDragStartBehavior,
+    this.endDrawer,
+    this.floatingActionButton,
+    this.floatingActionButtonAnimator,
+    this.floatingActionButtonLocation,
+    this.scaffoldKey,
+    this.persistentFooterButtons,
+    this.primary,
+    this.resizeToAvoidBottomInset,
+    this.resizeToAvoidBottomPadding,
   });
 
   final PreferredSizeWidget appBar;
+  final Color backgroundColor;
   final Widget body;
+  final Widget bottomSheet;
   final Widget bottomNavigationBar;
   final Duration scaffoldAnimationDuration;
+  final Widget drawer;
+  final DragStartBehavior drawerDragStartBehavior;
+  final Widget endDrawer;
+  final Widget floatingActionButton;
+  final FloatingActionButtonAnimator floatingActionButtonAnimator;
+  final FloatingActionButtonLocation floatingActionButtonLocation;
+  final Key scaffoldKey;
+  final List<Widget> persistentFooterButtons;
+  final bool primary;
+  final bool resizeToAvoidBottomInset;
+  final bool resizeToAvoidBottomPadding;
 
   static MorphScaffoldState of(BuildContext context) =>
-      (context.inheritFromWidgetOfExactType(InheritedMorphScaffold) as InheritedMorphScaffold).data;
+      (context.inheritFromWidgetOfExactType(InheritedMorphScaffold)
+          as InheritedMorphScaffold).data;
 
   @override
   MorphScaffoldState createState() => MorphScaffoldState();
@@ -73,8 +101,21 @@ class MorphScaffoldState extends State<MorphScaffold> with SingleTickerProviderS
           scale: _scale.value,
           child: Scaffold(
             appBar: widget.appBar,
+            backgroundColor: widget.backgroundColor,
             body: widget.body,
+            bottomSheet: widget.bottomSheet,
             bottomNavigationBar: widget.bottomNavigationBar,
+            drawer: widget.drawer,
+            drawerDragStartBehavior: widget.drawerDragStartBehavior,
+            endDrawer: widget.endDrawer,
+            floatingActionButton: widget.floatingActionButton,
+            floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
+            floatingActionButtonLocation: widget.floatingActionButtonLocation,
+            key: widget.scaffoldKey,
+            persistentFooterButtons: widget.persistentFooterButtons,
+            primary: widget.primary,
+            resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+            resizeToAvoidBottomPadding: widget.resizeToAvoidBottomPadding,
           ),
         ),
       ),
