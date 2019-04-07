@@ -1,6 +1,20 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import './inherited_morph_scaffold.dart';
+
+class _InheritedMorphScaffold extends InheritedWidget {
+
+  _InheritedMorphScaffold({
+    Key key,
+    @required this.data,
+    @required Widget child
+  }) : super(key: key, child: child);
+
+  final _MorphScaffoldState data;
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) => true;
+
+}
 
 class MorphScaffold extends StatefulWidget {
 
@@ -42,16 +56,16 @@ class MorphScaffold extends StatefulWidget {
   final bool resizeToAvoidBottomInset;
   final bool resizeToAvoidBottomPadding;
 
-  static MorphScaffoldState of(BuildContext context) =>
-      (context.inheritFromWidgetOfExactType(InheritedMorphScaffold)
-          as InheritedMorphScaffold).data;
+  static _MorphScaffoldState of(BuildContext context) =>
+      (context.inheritFromWidgetOfExactType(_InheritedMorphScaffold)
+          as _InheritedMorphScaffold).data;
 
   @override
-  MorphScaffoldState createState() => MorphScaffoldState();
+  _MorphScaffoldState createState() => _MorphScaffoldState();
 
 }
 
-class MorphScaffoldState extends State<MorphScaffold> with SingleTickerProviderStateMixin {
+class _MorphScaffoldState extends State<MorphScaffold> with SingleTickerProviderStateMixin {
 
   AnimationController _controller;
   Animation<double> _opacity;
@@ -93,7 +107,7 @@ class MorphScaffoldState extends State<MorphScaffold> with SingleTickerProviderS
 
   @override
   Widget build(BuildContext context) {
-    return InheritedMorphScaffold(
+    return _InheritedMorphScaffold(
       data: this,
       child: Opacity(
         opacity: _opacity.value,
