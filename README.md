@@ -6,7 +6,7 @@ A Flutter library for easily implementing Material Design navigation transitions
 
 ### Parent-child transition
 
-You can use `MorphPageRoute` to create a parent-child transition between your two screens.
+You can use `MorphPageRoute` to create a parent-child transition between two screens.
 
 ```dart
 import 'package:morph/morph.dart';
