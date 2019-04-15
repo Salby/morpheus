@@ -1,8 +1,9 @@
 import 'package:flutter/widgets.dart';
 
+/// Converts [Offset] to [Alignment].
 Alignment offsetToAlignment(Offset offset, Size displaySize) {
-  final double alignmentX = _convertValue(offset.dx / displaySize.width);
-  final double alignmentY = _convertValue(offset.dy / displaySize.height);
+  final double alignmentX = _convertValue(offset.dx);
+  final double alignmentY = _convertValue(offset.dy);
   return Alignment(alignmentX, alignmentY);
 }
 
