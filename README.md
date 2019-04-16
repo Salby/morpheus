@@ -29,7 +29,7 @@ class MyList extends StatelessWidget {
     );
   }
 
-  void _handleTap(BuildContext context, Key parentKey) {
+  void _handleTap(BuildContext context, GlobalKey parentKey) {
     Navigator.of(context).push(MorphPageRoute(
       child: Scaffold(),
       parentKey: parentKey,
