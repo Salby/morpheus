@@ -1,4 +1,4 @@
-# Morph
+![Morph](assets/logobar.png)
 
 A Flutter library for easily implementing Material Design navigation transitions.
 
