@@ -2,9 +2,20 @@ import 'package:flutter/widgets.dart';
 
 /// Converts [Offset] to [Alignment].
 Alignment offsetToAlignment(Offset offset, Size displaySize) {
-  final double alignmentX = _convertValue(offset.dx);
-  final double alignmentY = _convertValue(offset.dy);
-  return Alignment(alignmentX, alignmentY);
+  final double xOffsetPercent = _offsetToPercent(offset.dx, displaySize.width);
+  final double yOffsetPercent = _offsetToPercent(offset.dy, displaySize.height);
+  final double alignmentX = _convertValue(xOffsetPercent);
+  final double alignmentY = _convertValue(yOffsetPercent);
+  return Alignment(double.parse(alignmentX.toStringAsFixed(4)),
+      double.parse(alignmentY.toStringAsFixed(4)));
+}
+
+double _offsetToPercent(double value, double compareTo) {
+  if (value == 0.0) {
+    return 0.0;
+  } else {
+    return double.parse((compareTo / value).toStringAsFixed(4));
+  }
 }
 
 ///         -1.0
@@ -25,18 +36,16 @@ double _convertValue(double percentValue) {
   } else if (percentValue == 0.0) {
     converted = -1.0;
   } else if (percentValue < 0.5) {
-
     /// Multiply [percentValue] by 2 because it's value is
     /// woth double when we're only working with one half
     /// of the display.
     converted = percentValue * 2;
-    
+
     /// Find the difference between [converted] and
     /// 1.0, because we have to invert [converted].
     final double difference = 1.0 - converted;
     converted = -(difference);
   } else if (percentValue > 0.5) {
-    
     /// Subtract 0.5 (50%) from [percentValue] because
     /// we're only working with the lower half of the
     /// display.
@@ -47,5 +56,5 @@ double _convertValue(double percentValue) {
     /// of the display.
     converted = converted * 2;
   }
-  return converted;
+  return double.parse(converted.toStringAsFixed(4));
 }
