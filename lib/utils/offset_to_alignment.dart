@@ -6,15 +6,15 @@ Alignment offsetToAlignment(Offset offset, Size displaySize) {
   final double yOffsetPercent = _offsetToPercent(offset.dy, displaySize.height);
   final double alignmentX = _convertValue(xOffsetPercent);
   final double alignmentY = _convertValue(yOffsetPercent);
-  return Alignment(double.parse(alignmentX.toStringAsFixed(4)),
-      double.parse(alignmentY.toStringAsFixed(4)));
+  return Alignment(double.parse(alignmentX.toStringAsFixed(10)),
+      double.parse(alignmentY.toStringAsFixed(10)));
 }
 
 double _offsetToPercent(double value, double compareTo) {
   if (value == 0.0) {
     return 0.0;
   } else {
-    return double.parse((compareTo / value).toStringAsFixed(4));
+    return double.parse((value / compareTo).toStringAsFixed(10));
   }
 }
 
@@ -56,5 +56,5 @@ double _convertValue(double percentValue) {
     /// of the display.
     converted = converted * 2;
   }
-  return double.parse(converted.toStringAsFixed(4));
+  return double.parse(converted.toStringAsFixed(10));
 }

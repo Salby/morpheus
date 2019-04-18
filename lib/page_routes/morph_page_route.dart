@@ -6,7 +6,7 @@ class MorphPageRoute extends PageRouteBuilder {
   MorphPageRoute({
     @required this.child,
     @required this.parentKey,
-    this.duration = const Duration(milliseconds: 800),
+    this.duration = const Duration(milliseconds: 600),
   }) : super(
           pageBuilder: (context, animation, secondaryAnimation) => child,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -64,7 +64,7 @@ class MorphPageRoute extends PageRouteBuilder {
                         curve: Curves.fastOutSlowIn,
                       ),
                     )),
-                    child: child,
+                    child: Container(color: Colors.green, child: child),
                   ),
                 ),
               ),
@@ -86,18 +86,16 @@ class MorphPageRoute extends PageRouteBuilder {
   static Size _getSizePercent(BuildContext context, GlobalKey parentKey) {
     final Size displaySize = MediaQuery.of(context).size;
     final Size boxSize = _getSize(parentKey);
-    print(displaySize.height / boxSize.height / 100);
-    final Size percentSize = Size(
+    final percentSize = Size(
       boxSize.width != displaySize.width
           ? double.parse(
-              (displaySize.width / boxSize.width / 100).toStringAsFixed(2))
+              (boxSize.width / displaySize.width).toStringAsFixed(10))
           : 1.0,
       boxSize.height != displaySize.height
           ? double.parse(
-              (displaySize.height / boxSize.height / 100).toStringAsFixed(2))
+              (boxSize.height / displaySize.height).toStringAsFixed(10))
           : 1.0,
     );
-    print(percentSize);
     return percentSize;
   }
 
@@ -108,14 +106,6 @@ class MorphPageRoute extends PageRouteBuilder {
     final Size displaySize = MediaQuery.of(context).size;
     final Offset boxOffset = _getOffset(context, parentKey);
     final Alignment alignment = offsetToAlignment(boxOffset, displaySize);
-    final double parentHeight =
-        _getSize(parentKey).height / MediaQuery.of(context).size.height;
-    /*return Alignment(
-      alignment.x,
-      alignment.y.isNegative
-          ? alignment.y + parentHeight / 2
-          : alignment.y + parentHeight * 1.25,
-    );*/
     return alignment;
   }
 }
