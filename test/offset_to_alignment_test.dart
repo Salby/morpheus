@@ -27,10 +27,4 @@ void main() {
         (actualPercentFromHeight * 2.0) - 1.0;
     expect(convertValue(actualPercentFromHeight), expectedPercentOnUpperHalf);
   });
-  test('Offset y-value should be inverted', () {
-    final boxOffset = Offset(0.0, 0.1);
-    final Alignment alignment =
-        offsetToAlignment(Offset(boxOffset.dx, boxOffset.dy), displaySize);
-    expect(alignment.y, -0.8);
-  });
 }
