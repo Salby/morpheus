@@ -33,6 +33,9 @@ class MyList extends StatelessWidget {
     Navigator.of(context).push(MorphPageRoute(
       child: Scaffold(),
       parentKey: parentKey,
+      /// If you have a widget above [MyList], e.g. an
+      /// [AppBar], you should set an offset.
+      offset: kToolbarHeight,
     ));
   }
 

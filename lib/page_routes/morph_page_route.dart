@@ -7,7 +7,7 @@ class MorphPageRoute extends PageRouteBuilder {
   MorphPageRoute({
     @required this.child,
     @required this.parentKey,
-    this.duration = const Duration(milliseconds: 2000),
+    this.duration = const Duration(milliseconds: 500),
     this.offset = 0.0,
   }) : super(
           pageBuilder: (context, animation, secondaryAnimation) => child,
@@ -22,12 +22,12 @@ class MorphPageRoute extends PageRouteBuilder {
                   parent: animation,
                   curve: Interval(
                     0.0,
-                    0.2,
+                    0.4,
                     curve: Curves.fastOutSlowIn,
                   ),
                   reverseCurve: Interval(
                     0.0,
-                    0.2,
+                    0.4,
                     curve: Curves.fastOutSlowIn,
                   ),
                 )),
