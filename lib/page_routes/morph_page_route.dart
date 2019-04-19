@@ -6,8 +6,9 @@ class MorphPageRoute extends PageRouteBuilder {
   MorphPageRoute({
     @required this.child,
     @required this.parentKey,
-    this.duration = const Duration(milliseconds: 500),
+    this.duration = const Duration(milliseconds: 600),
     this.offset = 0.0,
+    this.elevation = 8.0,
   }) : super(
           pageBuilder: (context, animation, secondaryAnimation) => child,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -30,27 +31,21 @@ class MorphPageRoute extends PageRouteBuilder {
                     curve: Curves.fastOutSlowIn,
                   ),
                 )),
-                child: SizeTransition(
-                  sizeFactor: Tween<double>(
-                    begin: _getSizePercent(context, parentKey).height,
-                    end: 1.0,
-                  ).animate(CurvedAnimation(
-                    parent: animation,
-                    curve: Interval(
-                      0.2,
-                      1.0,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                    reverseCurve: Interval(
-                      0.2,
-                      1.0,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                  )),
+                child: Material(
+                  type: MaterialType.card,
+                  elevation: Tween<double>(
+                    begin: 0.0,
+                    end: elevation,
+                  )
+                      .animate(CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.fastOutSlowIn,
+                        reverseCurve: Curves.fastOutSlowIn,
+                      ))
+                      .value,
                   child: SizeTransition(
-                    axis: Axis.horizontal,
                     sizeFactor: Tween<double>(
-                      begin: _getSizePercent(context, parentKey).width,
+                      begin: _getSizePercent(context, parentKey).height,
                       end: 1.0,
                     ).animate(CurvedAnimation(
                       parent: animation,
@@ -65,7 +60,43 @@ class MorphPageRoute extends PageRouteBuilder {
                         curve: Curves.fastOutSlowIn,
                       ),
                     )),
-                    child: Container(color: Colors.green, child: child),
+                    child: SizeTransition(
+                      axis: Axis.horizontal,
+                      sizeFactor: Tween<double>(
+                        begin: _getSizePercent(context, parentKey).width,
+                        end: 1.0,
+                      ).animate(CurvedAnimation(
+                        parent: animation,
+                        curve: Interval(
+                          0.2,
+                          1.0,
+                          curve: Curves.fastOutSlowIn,
+                        ),
+                        reverseCurve: Interval(
+                          0.2,
+                          1.0,
+                          curve: Curves.fastOutSlowIn,
+                        ),
+                      )),
+                      child: FadeTransition(
+                          opacity: Tween<double>(
+                            begin: 0.0,
+                            end: 1.0,
+                          ).animate(CurvedAnimation(
+                            parent: animation,
+                            curve: Interval(
+                              0.5,
+                              1.0,
+                              curve: Curves.fastOutSlowIn,
+                            ),
+                            reverseCurve: Interval(
+                              0.5,
+                              1.0,
+                              curve: Curves.fastOutSlowIn,
+                            ),
+                          )),
+                          child: child),
+                    ),
                   ),
                 ),
               ),
@@ -78,6 +109,7 @@ class MorphPageRoute extends PageRouteBuilder {
   final GlobalKey parentKey;
   final Duration duration;
   final double offset;
+  final double elevation;
 
   static RenderBox _getRenderObject(GlobalKey parentKey) =>
       parentKey.currentContext.findRenderObject();
