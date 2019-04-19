@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/morph_scaffold.dart';
 import '../utils/offset_to_alignment.dart';
 
 /// PageRouteBuilder that uses a parent-child transition.
@@ -6,12 +7,13 @@ class MorphPageRoute extends PageRouteBuilder {
   MorphPageRoute({
     @required this.child,
     @required this.parentKey,
-    this.duration = const Duration(milliseconds: 600),
+    this.duration = const Duration(milliseconds: 2000),
+    this.offset = 0.0,
   }) : super(
           pageBuilder: (context, animation, secondaryAnimation) => child,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return Align(
-              alignment: _getAlignment(context, parentKey),
+              alignment: _getAlignment(context, parentKey, offset),
               child: FadeTransition(
                 opacity: Tween<double>(
                   begin: 0.0,
@@ -76,6 +78,7 @@ class MorphPageRoute extends PageRouteBuilder {
   final Widget child;
   final GlobalKey parentKey;
   final Duration duration;
+  final double offset;
 
   static RenderBox _getRenderObject(GlobalKey parentKey) =>
       parentKey.currentContext.findRenderObject();
@@ -88,12 +91,10 @@ class MorphPageRoute extends PageRouteBuilder {
     final Size boxSize = _getSize(parentKey);
     final percentSize = Size(
       boxSize.width != displaySize.width
-          ? double.parse(
-              (boxSize.width / displaySize.width).toStringAsFixed(10))
+          ? boxSize.width / displaySize.width
           : 1.0,
       boxSize.height != displaySize.height
-          ? double.parse(
-              (boxSize.height / displaySize.height).toStringAsFixed(10))
+          ? boxSize.height / displaySize.height
           : 1.0,
     );
     return percentSize;
@@ -102,10 +103,12 @@ class MorphPageRoute extends PageRouteBuilder {
   static Offset _getOffset(BuildContext context, GlobalKey parentKey) =>
       MorphPageRoute._getRenderObject(parentKey).localToGlobal(Offset.zero);
 
-  static Alignment _getAlignment(BuildContext context, GlobalKey parentKey) {
+  static Alignment _getAlignment(
+      BuildContext context, GlobalKey parentKey, double offset) {
     final Size displaySize = MediaQuery.of(context).size;
     final Offset boxOffset = _getOffset(context, parentKey);
-    final Alignment alignment = offsetToAlignment(boxOffset, displaySize);
+    final Alignment alignment = offsetToAlignment(
+        boxOffset, Size(displaySize.width, displaySize.height - offset));
     return alignment;
   }
 }

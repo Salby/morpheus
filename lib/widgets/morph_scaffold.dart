@@ -2,22 +2,17 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class _InheritedMorphScaffold extends InheritedWidget {
-
-  _InheritedMorphScaffold({
-    Key key,
-    @required this.data,
-    @required Widget child
-  }) : super(key: key, child: child);
+  _InheritedMorphScaffold(
+      {Key key, @required this.data, @required Widget child})
+      : super(key: key, child: child);
 
   final _MorphScaffoldState data;
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => true;
-
 }
 
 class MorphScaffold extends StatefulWidget {
-
   MorphScaffold({
     this.appBar,
     this.backgroundColor,
@@ -31,7 +26,6 @@ class MorphScaffold extends StatefulWidget {
     this.floatingActionButton,
     this.floatingActionButtonAnimator,
     this.floatingActionButtonLocation,
-    this.scaffoldKey,
     this.persistentFooterButtons,
     this.primary = true,
     this.resizeToAvoidBottomInset,
@@ -50,7 +44,6 @@ class MorphScaffold extends StatefulWidget {
   final Widget floatingActionButton;
   final FloatingActionButtonAnimator floatingActionButtonAnimator;
   final FloatingActionButtonLocation floatingActionButtonLocation;
-  final Key scaffoldKey;
   final List<Widget> persistentFooterButtons;
   final bool primary;
   final bool resizeToAvoidBottomInset;
@@ -58,19 +51,20 @@ class MorphScaffold extends StatefulWidget {
 
   static _MorphScaffoldState of(BuildContext context) =>
       (context.inheritFromWidgetOfExactType(_InheritedMorphScaffold)
-          as _InheritedMorphScaffold).data;
+              as _InheritedMorphScaffold)
+          .data;
 
   @override
   _MorphScaffoldState createState() => _MorphScaffoldState();
-
 }
 
-class _MorphScaffoldState extends State<MorphScaffold> with SingleTickerProviderStateMixin {
-
+class _MorphScaffoldState extends State<MorphScaffold>
+    with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _opacity;
   Animation<double> _scale;
   bool _hidden = false;
+  final _key = GlobalKey();
 
   @override
   void initState() {
@@ -78,14 +72,13 @@ class _MorphScaffoldState extends State<MorphScaffold> with SingleTickerProvider
     _controller = AnimationController(
       duration: widget.scaffoldAnimationDuration,
       vsync: this,
-    )
-        ..addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            _hidden = true;
-          } else if (status == AnimationStatus.dismissed) {
-            _hidden = false;
-          }
-        });
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _hidden = true;
+        } else if (status == AnimationStatus.dismissed) {
+          _hidden = false;
+        }
+      });
     _opacity = Tween<double>(
       begin: 1.0,
       end: 0.0,
@@ -94,7 +87,9 @@ class _MorphScaffoldState extends State<MorphScaffold> with SingleTickerProvider
       curve: Curves.fastOutSlowIn,
       reverseCurve: Curves.fastOutSlowIn,
     ))
-        ..addListener(() { setState(() {}); });
+      ..addListener(() {
+        setState(() {});
+      });
     _scale = Tween<double>(
       begin: 1.0,
       end: 0.9,
@@ -125,7 +120,7 @@ class _MorphScaffoldState extends State<MorphScaffold> with SingleTickerProvider
             floatingActionButton: widget.floatingActionButton,
             floatingActionButtonAnimator: widget.floatingActionButtonAnimator,
             floatingActionButtonLocation: widget.floatingActionButtonLocation,
-            key: widget.scaffoldKey,
+            key: _key,
             persistentFooterButtons: widget.persistentFooterButtons,
             primary: widget.primary,
             resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
@@ -137,6 +132,8 @@ class _MorphScaffoldState extends State<MorphScaffold> with SingleTickerProvider
   }
 
   bool get hidden => _hidden;
+
+  Size get size => _getSize();
 
   Future<void> show() async {
     if (_hidden) {
@@ -156,10 +153,14 @@ class _MorphScaffoldState extends State<MorphScaffold> with SingleTickerProvider
     }
   }
 
+  Size _getSize() {
+    final RenderBox renderObject = _key.currentContext.findRenderObject();
+    return renderObject.size;
+  }
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
 }
