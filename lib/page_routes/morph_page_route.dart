@@ -2,6 +2,16 @@ import 'package:flutter/material.dart';
 import '../utils/offset_to_alignment.dart';
 
 /// PageRouteBuilder that uses a parent-child transition.
+///
+/// [MorphPageRoute] requires a child, which is the widget
+/// you want to show after the transition is complete.
+/// [parentKey] is a key that is attached to the widget you
+/// want to animate from.
+/// You can change the duration if you want to adjust the
+/// speed of the transition.
+/// If you have a widget that pushes [parentKey]'s widget's
+/// parent, e.g. an [AppBar], you will want to set an
+/// offset.
 class MorphPageRoute extends PageRouteBuilder {
   MorphPageRoute({
     @required this.child,
