@@ -43,5 +43,5 @@ class MyList extends StatelessWidget {
 ```
 
 ## Feature roadmap
-- [ ] Parent-child transition
+- [x] Parent-child transition
 - [ ] Top-level transition
