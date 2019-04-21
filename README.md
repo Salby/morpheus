@@ -67,7 +67,7 @@ class _MyTabScreenState extends State<MyTabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MorphScaffold(
+    return Scaffold(
       body: MorphTabView(
         child: _screens[_currentIndex]
       ),
