@@ -19,18 +19,14 @@ class MorphPageRoute extends PageRouteBuilder {
     this.duration = const Duration(milliseconds: 600),
     this.offset = 0.0,
     this.elevation = 8.0,
-    this.scrimColor,
+    this.scrimColor = Colors.transparent,
   }) : super(
           pageBuilder: (context, animation, secondaryAnimation) => child,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return Container(
               color: ColorTween(
-                begin: scrimColor != null
-                    ? scrimColor.withOpacity(0.0)
-                    : Colors.transparent,
-                end: scrimColor != null
-                    ? scrimColor
-                    : Colors.transparent,
+                begin: scrimColor.withOpacity(0.0),
+                end: scrimColor,
               )
                   .animate(CurvedAnimation(
                     parent: animation,
