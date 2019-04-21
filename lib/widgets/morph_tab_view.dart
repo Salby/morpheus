@@ -1,6 +1,11 @@
 import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
+/// A widget that plays a top-level transition whenever its
+/// [child] changes.
+///
+/// You can set a custom [Curve] and [Duration] to tweak
+/// the feel of the animation.
 class MorphTabView extends ImplicitlyAnimatedWidget {
   MorphTabView({
     @required this.child,
