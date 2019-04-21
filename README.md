@@ -1,6 +1,6 @@
 # Morpheus
 
-A Flutter library for easily implementing Material Design navigation transitions.
+A Flutter package for easily implementing Material Design navigation transitions.
 
 ## Examples
 
