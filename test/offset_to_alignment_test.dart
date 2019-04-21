@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:morph/utils/offset_to_alignment.dart';
+import 'package:morpheus/utils/offset_to_alignment.dart';
 
 void main() {
   final Size displaySize = Size(411.42857142857144, 774.8571428571429);

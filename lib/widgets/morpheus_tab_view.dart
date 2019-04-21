@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 ///
 /// You can set a custom [Curve] and [Duration] to tweak
 /// the feel of the animation.
-class MorphTabView extends ImplicitlyAnimatedWidget {
-  MorphTabView({
+class MorpheusTabView extends ImplicitlyAnimatedWidget {
+  MorpheusTabView({
     @required this.child,
     Curve curve = Curves.fastOutSlowIn,
     Duration duration = const Duration(milliseconds: 300),
@@ -19,10 +19,10 @@ class MorphTabView extends ImplicitlyAnimatedWidget {
   final Widget child;
 
   @override
-  _MorphTabViewState createState() => _MorphTabViewState();
+  _MorpheusTabViewState createState() => _MorpheusTabViewState();
 }
 
-class _MorphTabViewState extends AnimatedWidgetBaseState<MorphTabView> {
+class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
   _TopLevelOpacityTween _opacityTween;
   _TopLevelScaleTween _scaleTween;
   _TopLevelChildTween _childTween;

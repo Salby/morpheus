@@ -1,4 +1,4 @@
-# ![Morph](assets/logobar.png)
+# Morpheus
 
 A Flutter library for easily implementing Material Design navigation transitions.
 
@@ -6,10 +6,10 @@ A Flutter library for easily implementing Material Design navigation transitions
 
 ### Parent-child transition
 
-You can use `MorphPageRoute` to create a [parent-child transition](https://material.io/design/navigation/navigation-transitions.html#hierarchical-transitions) between two screens.
+You can use `MorpheusPageRoute` to create a [parent-child transition](https://material.io/design/navigation/navigation-transitions.html#hierarchical-transitions) between two screens.
 
 ```dart
-import 'package:morph/morph.dart';
+import 'package:morpheus/morpheus.dart';
 
 class MyList extends StatelessWidget {
 
@@ -30,7 +30,7 @@ class MyList extends StatelessWidget {
   }
 
   void _handleTap(BuildContext context, GlobalKey parentKey) {
-    Navigator.of(context).push(MorphPageRoute(
+    Navigator.of(context).push(MorpheusPageRoute(
       child: Scaffold(),
       parentKey: parentKey,
       /// If you have a widget above [MyList], e.g. an
@@ -44,10 +44,10 @@ class MyList extends StatelessWidget {
 
 ### Top-level transition
 
-You can use the `MorphTabView` widget to create a [top-level transition](https://material.io/design/navigation/navigation-transitions.html#peer-transitions) when the child widget changes.
+You can use the `MorpheusTabView` widget to create a [top-level transition](https://material.io/design/navigation/navigation-transitions.html#peer-transitions) when the child widget changes.
 
 ```dart
-import 'package:morph/morph.dart';
+import 'package:morpheus/morpheus.dart';
 
 class MyTabScreen extends StatefulWidget {
 
@@ -68,7 +68,7 @@ class _MyTabScreenState extends State<MyTabScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MorphTabView(
+      body: MorpheusTabView(
         child: _screens[_currentIndex]
       ),
       bottomNavigationBar: BottomNavigationBar(

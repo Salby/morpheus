@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:morph/morph.dart';
+import 'package:morpheus/morpheus.dart';
 
 void main() => runApp(ExampleApp());
 
@@ -7,7 +7,7 @@ class ExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Morph example',
+      title: 'Morpheus example',
       home: TabScreen(),
     );
   }
@@ -29,7 +29,9 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
+      body: MorpheusTabView(
+        child: _screens[_currentIndex],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -80,7 +82,7 @@ class ListScreen extends StatelessWidget {
   }
 
   Future<void> _handleTap(context, int index, GlobalKey parentKey) async {
-    await Navigator.of(context).push(MorphPageRoute(
+    await Navigator.of(context).push(MorpheusPageRoute(
       child: PostScreen(index),
       parentKey: parentKey,
       offset: kToolbarHeight,

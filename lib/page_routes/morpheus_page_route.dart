@@ -3,7 +3,7 @@ import '../utils/offset_to_alignment.dart';
 
 /// PageRouteBuilder that uses a parent-child transition.
 ///
-/// [MorphPageRoute] requires a child, which is the widget
+/// [MorpheusPageRoute] requires a child, which is the widget
 /// you want to show after the transition is complete.
 /// [parentKey] is a key that is attached to the widget you
 /// want to animate from.
@@ -12,8 +12,8 @@ import '../utils/offset_to_alignment.dart';
 /// If you have a widget that pushes [parentKey]'s widget's
 /// parent, e.g. an [AppBar], you will want to set an
 /// offset.
-class MorphPageRoute extends PageRouteBuilder {
-  MorphPageRoute({
+class MorpheusPageRoute extends PageRouteBuilder {
+  MorpheusPageRoute({
     @required this.child,
     @required this.parentKey,
     this.duration = const Duration(milliseconds: 600),
@@ -147,8 +147,7 @@ class MorphPageRoute extends PageRouteBuilder {
   static RenderBox _getRenderObject(GlobalKey parentKey) =>
       parentKey.currentContext.findRenderObject();
 
-  static Size _getSize(GlobalKey parentKey) =>
-      MorphPageRoute._getRenderObject(parentKey).size;
+  static Size _getSize(GlobalKey parentKey) => _getRenderObject(parentKey).size;
 
   static Size _getSizePercent(BuildContext context, GlobalKey parentKey) {
     final Size displaySize = MediaQuery.of(context).size;
@@ -165,7 +164,7 @@ class MorphPageRoute extends PageRouteBuilder {
   }
 
   static Offset _getOffset(BuildContext context, GlobalKey parentKey) =>
-      MorphPageRoute._getRenderObject(parentKey).localToGlobal(Offset.zero);
+      _getRenderObject(parentKey).localToGlobal(Offset.zero);
 
   static Alignment _getAlignment(
       BuildContext context, GlobalKey parentKey, double offset) {
