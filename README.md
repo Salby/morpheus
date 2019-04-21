@@ -6,7 +6,7 @@ A Flutter library for easily implementing Material Design navigation transitions
 
 ### Parent-child transition
 
-You can use `MorphPageRoute` to create a parent-child transition between two screens.
+You can use `MorphPageRoute` to create a [parent-child transition](https://material.io/design/navigation/navigation-transitions.html#hierarchical-transitions) between two screens.
 
 ```dart
 import 'package:morph/morph.dart';
@@ -42,5 +42,55 @@ class MyList extends StatelessWidget {
 }
 ```
 
-## Feature roadmap
-- Top-level transition
+### Top-level transition
+
+You can use the `MorphTabView` widget to create a [top-level transition](https://material.io/design/navigation/navigation-transitions.html#peer-transitions) when the child widget changes.
+
+```dart
+import 'package:morph/morph.dart';
+
+class MyTabScreen extends StatefulWidget {
+
+  @override
+  _MyTabScreenState createState() => _MyTabScreenState();
+
+}
+
+class _MyTabScreenState extends State<MyTabScreen> {
+
+  final List<Widget> _screens = [
+    Scaffold(backgroundColor: Colors.green),
+    Scaffold(backgroundColor: Colors.red),
+    Scaffold(backgroundColor: Colors.blue),
+  ];
+  int _currentIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return MorphScaffold(
+      body: MorphTabView(
+        child: _screens[_currentIndex]
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.trending_up),
+            title: Text('Trending'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            title: Text('Saved'),
+          ),
+        ],
+        onTap: (index) {
+          if (index != _currentIndex) {
+            setState(() => _currentIndex = index);
+          }
+        },
+      ),
+    );
+  }
+
+}
+```
