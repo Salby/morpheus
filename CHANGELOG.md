@@ -2,6 +2,9 @@
 
 ## [0.3.1] - 2019-04-22
 
+### Added
+- Added GIF examples.
+
 ### Fixed
 - Fixed exception where `findRenderObject` was being called on null.
 
