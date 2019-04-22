@@ -1,5 +1,7 @@
 # Morpheus
 
+![Pub](https://img.shields.io/pub/v/morpheus.svg)
+
 A Flutter package for easily implementing Material Design navigation transitions.
 
 ## Examples
