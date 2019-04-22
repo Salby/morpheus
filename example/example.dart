@@ -83,9 +83,8 @@ class ListScreen extends StatelessWidget {
 
   Future<void> _handleTap(context, int index, GlobalKey parentKey) async {
     await Navigator.of(context).push(MorpheusPageRoute(
-      child: PostScreen(index),
+      builder: (context) => PostScreen(index),
       parentKey: parentKey,
-      offset: kToolbarHeight,
     ));
     return;
   }

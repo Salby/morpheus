@@ -31,11 +31,8 @@ class MyList extends StatelessWidget {
 
   void _handleTap(BuildContext context, GlobalKey parentKey) {
     Navigator.of(context).push(MorpheusPageRoute(
-      child: Scaffold(),
+      builder: (context) => Scaffold(),
       parentKey: parentKey,
-      /// If you have a widget above [MyList], e.g. an
-      /// [AppBar], you should set an offset.
-      offset: kToolbarHeight,
     ));
   }
 
