@@ -15,23 +15,31 @@ class MorpheusPageRoute extends PageRoute {
     this.offset = kToolbarHeight,
     this.elevation = 8.0,
     this.scrimColor = Colors.transparent,
-  }) : _renderBox = findRenderBox(parentKey);
+  })  : renderBoxOffset = _getOffset(parentKey),
+        renderBoxSize = _getSize(parentKey);
 
   final WidgetBuilder builder;
   final GlobalKey parentKey;
   final double offset;
   final double elevation;
   final Color scrimColor;
-  final RenderBox _renderBox;
+  final Offset renderBoxOffset;
+  final Size renderBoxSize;
 
-  static RenderBox findRenderBox(GlobalKey parentKey) =>
+  static RenderBox _findRenderBox(GlobalKey parentKey) =>
       parentKey.currentContext.findRenderObject();
 
-  Size _getSize() => _renderBox.size;
+  static Offset _getOffset(GlobalKey parentKey) {
+    return _findRenderBox(parentKey).localToGlobal(Offset.zero);
+  }
+
+  static Size _getSize(GlobalKey parentKey) {
+    return _findRenderBox(parentKey).size;
+  }
 
   Size _getSizePercent(BuildContext context) {
     final Size displaySize = MediaQuery.of(context).size;
-    final Size boxSize = _getSize();
+    final Size boxSize = renderBoxSize;
     final percentSize = Size(
       boxSize.width != displaySize.width
           ? boxSize.width / displaySize.width
@@ -43,14 +51,10 @@ class MorpheusPageRoute extends PageRoute {
     return percentSize;
   }
 
-  Offset _getOffset(BuildContext context) =>
-      _renderBox.localToGlobal(Offset.zero);
-
   Alignment _getAlignment(BuildContext context, double offset) {
     final Size displaySize = MediaQuery.of(context).size;
-    final Offset boxOffset = _getOffset(context);
     final Alignment alignment = offsetToAlignment(
-        boxOffset, Size(displaySize.width, displaySize.height - offset));
+        renderBoxOffset, Size(displaySize.width, displaySize.height - offset));
     return alignment;
   }
 

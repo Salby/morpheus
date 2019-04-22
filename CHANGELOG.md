@@ -1,3 +1,11 @@
-## [0.0.1] - TODO: Add release date.
+# Changelog
 
-* TODO: Describe initial release.
+## [0.3.1] - 2019-04-22
+
+### Fixed
+- Fixed exception where `findRenderObject` was being called on null.
+
+## [0.3.0] - 2019-04-22
+
+### Changed
+- Changed `MorpheusPageRoute`'s `child` parameter to a `Builder`.
