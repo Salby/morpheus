@@ -12,7 +12,6 @@ class MorpheusPageRoute extends PageRoute {
     @required this.builder,
     @required this.parentKey,
     this.transitionDuration = const Duration(milliseconds: 600),
-    this.offset = kToolbarHeight,
     this.elevation = 8.0,
     this.scrimColor = Colors.transparent,
   })  : renderBoxOffset = _getOffset(parentKey),
@@ -20,7 +19,6 @@ class MorpheusPageRoute extends PageRoute {
 
   final WidgetBuilder builder;
   final GlobalKey parentKey;
-  final double offset;
   final double elevation;
   final Color scrimColor;
   final Offset renderBoxOffset;
@@ -51,10 +49,12 @@ class MorpheusPageRoute extends PageRoute {
     return percentSize;
   }
 
-  Alignment _getAlignment(BuildContext context, double offset) {
+  Alignment _getAlignment(BuildContext context) {
     final Size displaySize = MediaQuery.of(context).size;
     final Alignment alignment = offsetToAlignment(
-        renderBoxOffset, Size(displaySize.width, displaySize.height - offset));
+        renderBoxOffset,
+        Size(displaySize.width - renderBoxSize.width,
+            displaySize.height - renderBoxSize.height));
     return alignment;
   }
 
@@ -105,7 +105,7 @@ class MorpheusPageRoute extends PageRoute {
           ))
           .value,
       child: Align(
-        alignment: _getAlignment(context, offset),
+        alignment: _getAlignment(context),
         child: FadeTransition(
           opacity: Tween<double>(
             begin: 0.0,

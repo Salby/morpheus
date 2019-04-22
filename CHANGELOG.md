@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.0] - 2019-04-22
+
+### Removed
+- `MorpheusPageRoute`'s `offset` parameter.
+
 ## [0.3.1] - 2019-04-22
 
 ### Added
