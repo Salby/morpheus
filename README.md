@@ -10,7 +10,7 @@ A Flutter package for easily implementing Material Design navigation transitions
 
 You can use `MorpheusPageRoute` to create a [parent-child transition](https://material.io/design/navigation/navigation-transitions.html#hierarchical-transitions) between two screens.
 
-[GIF EXAMPLE](https://github.com/Salby/morpheus/blob/master/assets/parentchild-demo.gif)
+<img src="https://github.com/Salby/morpheus/blob/master/assets/parentchild-demo.gif" align = "right" width="30%" alt="Parent-child gif">
 
 ```dart
 import 'package:morpheus/morpheus.dart';
@@ -47,7 +47,7 @@ class MyList extends StatelessWidget {
 
 You can use the `MorpheusTabView` widget to create a [top-level transition](https://material.io/design/navigation/navigation-transitions.html#peer-transitions) when the child widget changes.
 
-[GIF EXAMPLE](https://github.com/Salby/morpheus/blob/master/assets/toplevel-demo.gif)
+<img src="https://github.com/Salby/morpheus/blob/master/assets/toplevel-demo.gif" align = "right" width="30%" alt="Top-level gif">
 
 ```dart
 import 'package:morpheus/morpheus.dart';
