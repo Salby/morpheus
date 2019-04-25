@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.0] - 2019-04-25
+
+### Added
+- Added `transitionColor` parameter to `MorpheusPageRoute` that lets you control the color of the transition element.
+- `MorpheusPageRoute` can now be typed (e.g. `final Model model = await Navigator.of(context).push(MorpheusPageRoute(...))`).
+
 ## [0.5.0] - 2019-04-25
 
 ### Added

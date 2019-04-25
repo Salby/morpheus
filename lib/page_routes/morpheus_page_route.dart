@@ -7,7 +7,7 @@ import '../utils/offset_to_alignment.dart';
 /// want to animate from.
 /// You can change the duration if you want to adjust the
 /// speed of the transition.
-class MorpheusPageRoute extends PageRoute {
+class MorpheusPageRoute<T> extends PageRoute<T> {
   MorpheusPageRoute({
     @required this.builder,
     @required this.parentKey,
@@ -15,6 +15,7 @@ class MorpheusPageRoute extends PageRoute {
     this.elevation = 8.0,
     this.scrimColor = Colors.transparent,
     this.shapeBorderTween,
+    this.transitionColor,
   })  : renderBoxOffset = _getOffset(parentKey),
         renderBoxSize = _getSize(parentKey);
 
@@ -25,6 +26,7 @@ class MorpheusPageRoute extends PageRoute {
   final Offset renderBoxOffset;
   final Size renderBoxSize;
   final ShapeBorderTween shapeBorderTween;
+  final Color transitionColor;
 
   static RenderBox _findRenderBox(GlobalKey parentKey) =>
       parentKey.currentContext.findRenderObject();
@@ -184,6 +186,7 @@ class MorpheusPageRoute extends PageRoute {
           .value,
       child: Material(
         type: MaterialType.card,
+        color: transitionColor,
         shape: _shapeBorderTween(animation).value,
         elevation: Tween<double>(
           begin: 0.0,
@@ -225,6 +228,7 @@ class MorpheusPageRoute extends PageRoute {
       Widget child) {
     return Material(
       type: MaterialType.card,
+      color: transitionColor,
       shape: _shapeBorderTween(animation).value,
       elevation: Tween<double>(
         begin: 0.0,
