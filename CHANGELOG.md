@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.1] - 2019-04-25
+
+### Fixes
+- Fixed `MorpheusPageRoute` transition element not clipping the child screen.
+
 ## [0.6.0] - 2019-04-25
 
 ### Added

@@ -186,6 +186,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
           .value,
       child: Material(
         type: MaterialType.card,
+        clipBehavior: Clip.antiAlias,
         color: transitionColor,
         shape: _shapeBorderTween(animation).value,
         elevation: Tween<double>(
@@ -205,13 +206,13 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
           ).animate(CurvedAnimation(
             parent: animation,
             curve: Interval(
-              0.4,
-              0.8,
+              0.6,
+              0.9,
               curve: Curves.fastOutSlowIn,
             ),
             reverseCurve: Interval(
-              0.4,
-              0.8,
+              0.6,
+              0.9,
               curve: Curves.fastOutSlowIn,
             ),
           )),
@@ -227,6 +228,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
       Animation<double> secondaryAnimation,
       Widget child) {
     return Material(
+      clipBehavior: Clip.antiAlias,
       type: MaterialType.card,
       color: transitionColor,
       shape: _shapeBorderTween(animation).value,
