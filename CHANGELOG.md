@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.0] - 2019-04-25
+
+### Added
+- Added `shapeBorderTween` parameter to `MorpheusPageRoute` that lets you control the shape of the child screen.
+- (Under the hood) Split `MorpheusPageRoute.buildTransitions` into two seperate transitions, one specifically for vertical-only transitions, and another that's not as fancy, but is more consistent across different sizes and positions.
+
 ## [0.4.0] - 2019-04-22
 
 ### Removed

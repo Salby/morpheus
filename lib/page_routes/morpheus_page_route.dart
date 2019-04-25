@@ -14,6 +14,7 @@ class MorpheusPageRoute extends PageRoute {
     this.transitionDuration = const Duration(milliseconds: 600),
     this.elevation = 8.0,
     this.scrimColor = Colors.transparent,
+    this.shapeBorderTween,
   })  : renderBoxOffset = _getOffset(parentKey),
         renderBoxSize = _getSize(parentKey);
 
@@ -23,6 +24,7 @@ class MorpheusPageRoute extends PageRoute {
   final Color scrimColor;
   final Offset renderBoxOffset;
   final Size renderBoxSize;
+  final ShapeBorderTween shapeBorderTween;
 
   static RenderBox _findRenderBox(GlobalKey parentKey) =>
       parentKey.currentContext.findRenderObject();
@@ -107,93 +109,209 @@ class MorpheusPageRoute extends PageRoute {
       child: Align(
         alignment: _getAlignment(context),
         child: FadeTransition(
+            opacity: Tween<double>(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Interval(
+                0.0,
+                0.4,
+                curve: Curves.fastOutSlowIn,
+              ),
+              reverseCurve: Interval(
+                0.0,
+                0.4,
+                curve: Curves.fastOutSlowIn,
+              ),
+            )),
+
+            /// If [renderBoxOffset.dx] is 0, build a
+            /// vertical-only transition. If not, build a
+            /// bidirectional transition that isn't as nice,
+            /// but is more consistent with different sizes
+            /// and offsets.
+            child: renderBoxOffset.dx == 0
+                ? _verticalTransitionsBuilder(
+                    context, animation, secondaryAnimation, child)
+                : _bidirectionalTransitionsBuilder(
+                    context, animation, secondaryAnimation, child)),
+      ),
+    );
+  }
+
+  Widget _bidirectionalTransitionsBuilder(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    return Container(
+      width: Tween<double>(
+        begin: renderBoxSize.width,
+        end: MediaQuery.of(context).size.width,
+      )
+          .animate(CurvedAnimation(
+            parent: animation,
+            curve: Interval(
+              0.2,
+              1.0,
+              curve: Curves.fastOutSlowIn,
+            ),
+            reverseCurve: Interval(
+              0.2,
+              1.0,
+              curve: Curves.fastOutSlowIn,
+            ),
+          ))
+          .value,
+      height: Tween<double>(
+        begin: renderBoxSize.height,
+        end: MediaQuery.of(context).size.height,
+      )
+          .animate(CurvedAnimation(
+            parent: animation,
+            curve: Interval(
+              0.2,
+              1.0,
+              curve: Curves.fastOutSlowIn,
+            ),
+            reverseCurve: Interval(
+              0.2,
+              1.0,
+              curve: Curves.fastOutSlowIn,
+            ),
+          ))
+          .value,
+      child: Material(
+        type: MaterialType.card,
+        shape: _shapeBorderTween(animation).value,
+        elevation: Tween<double>(
+          begin: 0.0,
+          end: elevation,
+        )
+            .animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.fastOutSlowIn,
+              reverseCurve: Curves.fastOutSlowIn,
+            ))
+            .value,
+        child: FadeTransition(
           opacity: Tween<double>(
             begin: 0.0,
             end: 1.0,
           ).animate(CurvedAnimation(
             parent: animation,
             curve: Interval(
-              0.0,
               0.4,
+              0.8,
               curve: Curves.fastOutSlowIn,
             ),
             reverseCurve: Interval(
-              0.0,
               0.4,
+              0.8,
               curve: Curves.fastOutSlowIn,
             ),
           )),
-          child: Material(
-            type: MaterialType.card,
-            elevation: Tween<double>(
-              begin: 0.0,
-              end: elevation,
-            )
-                .animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.fastOutSlowIn,
-                  reverseCurve: Curves.fastOutSlowIn,
-                ))
-                .value,
-            child: SizeTransition(
-              sizeFactor: Tween<double>(
-                begin: _getSizePercent(context).height,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Interval(
-                  0.2,
-                  1.0,
-                  curve: Curves.fastOutSlowIn,
-                ),
-                reverseCurve: Interval(
-                  0.2,
-                  1.0,
-                  curve: Curves.fastOutSlowIn,
-                ),
-              )),
-              child: SizeTransition(
-                axis: Axis.horizontal,
-                sizeFactor: Tween<double>(
-                  begin: _getSizePercent(context).width,
-                  end: 1.0,
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Interval(
-                    0.2,
-                    1.0,
-                    curve: Curves.fastOutSlowIn,
-                  ),
-                  reverseCurve: Interval(
-                    0.2,
-                    1.0,
-                    curve: Curves.fastOutSlowIn,
-                  ),
-                )),
-                child: FadeTransition(
-                  opacity: Tween<double>(
-                    begin: 0.0,
-                    end: 1.0,
-                  ).animate(CurvedAnimation(
-                    parent: animation,
-                    curve: Interval(
-                      0.4,
-                      0.8,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                    reverseCurve: Interval(
-                      0.4,
-                      0.8,
-                      curve: Curves.fastOutSlowIn,
-                    ),
-                  )),
-                  child: child,
-                ),
-              ),
+          child: child,
+        ),
+      ),
+    );
+  }
+
+  Widget _verticalTransitionsBuilder(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child) {
+    return Material(
+      type: MaterialType.card,
+      shape: _shapeBorderTween(animation).value,
+      elevation: Tween<double>(
+        begin: 0.0,
+        end: elevation,
+      )
+          .animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastOutSlowIn,
+            reverseCurve: Curves.fastOutSlowIn,
+          ))
+          .value,
+      child: SizeTransition(
+        sizeFactor: Tween<double>(
+          begin: _getSizePercent(context).height,
+          end: 1.0,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Interval(
+            0.2,
+            1.0,
+            curve: Curves.fastOutSlowIn,
+          ),
+          reverseCurve: Interval(
+            0.2,
+            1.0,
+            curve: Curves.fastOutSlowIn,
+          ),
+        )),
+        child: SizeTransition(
+          axis: Axis.horizontal,
+          sizeFactor: Tween<double>(
+            begin: _getSizePercent(context).width,
+            end: 1.0,
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Interval(
+              0.2,
+              1.0,
+              curve: Curves.fastOutSlowIn,
             ),
+            reverseCurve: Interval(
+              0.2,
+              1.0,
+              curve: Curves.fastOutSlowIn,
+            ),
+          )),
+          child: FadeTransition(
+            opacity: Tween<double>(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Interval(
+                0.4,
+                0.8,
+                curve: Curves.fastOutSlowIn,
+              ),
+              reverseCurve: Interval(
+                0.4,
+                0.8,
+                curve: Curves.fastOutSlowIn,
+              ),
+            )),
+            child: child,
           ),
         ),
       ),
     );
+  }
+
+  Animation<ShapeBorder> _shapeBorderTween(Animation<double> animation) {
+    final defaultTween = ShapeBorderTween(
+      begin: RoundedRectangleBorder(),
+      end: RoundedRectangleBorder(),
+    );
+    return (shapeBorderTween ?? defaultTween).animate(CurvedAnimation(
+      parent: animation,
+      curve: Interval(
+        0.2,
+        1.0,
+        curve: Curves.fastOutSlowIn,
+      ),
+      reverseCurve: Interval(
+        0.2,
+        1.0,
+        curve: Curves.fastOutSlowIn,
+      ),
+    ));
   }
 }
