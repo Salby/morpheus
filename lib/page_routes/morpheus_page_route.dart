@@ -206,13 +206,13 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
           ).animate(CurvedAnimation(
             parent: animation,
             curve: Interval(
-              0.6,
-              0.9,
+              0.4,
+              0.8,
               curve: Curves.fastOutSlowIn,
             ),
             reverseCurve: Interval(
-              0.6,
-              0.9,
+              0.4,
+              0.8,
               curve: Curves.fastOutSlowIn,
             ),
           )),

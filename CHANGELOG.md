@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.2] - 2019-04-26
+
+### Added
+- Small tweaks to `MorpheusPageRoute` transitions.
+
 ## [0.6.1] - 2019-04-25
 
 ### Fixes
