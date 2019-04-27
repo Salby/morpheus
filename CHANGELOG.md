@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.3] - 2019-04-27
+
+### Changed
+- Changed reverse curves in `MorpheusPageRoute`.
+
 ## [0.6.2] - 2019-04-26
 
 ### Added

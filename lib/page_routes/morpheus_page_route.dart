@@ -104,7 +104,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
             reverseCurve: Interval(
               0.2,
               1.0,
-              curve: Curves.fastOutSlowIn,
+              curve: Curves.fastOutSlowIn.flipped,
             ),
           ))
           .value,
@@ -124,7 +124,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
               reverseCurve: Interval(
                 0.0,
                 0.4,
-                curve: Curves.fastOutSlowIn,
+                curve: Curves.fastOutSlowIn.flipped,
               ),
             )),
 
@@ -162,7 +162,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
             reverseCurve: Interval(
               0.2,
               1.0,
-              curve: Curves.fastOutSlowIn,
+              curve: Curves.fastOutSlowIn.flipped,
             ),
           ))
           .value,
@@ -180,7 +180,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
             reverseCurve: Interval(
               0.2,
               1.0,
-              curve: Curves.fastOutSlowIn,
+              curve: Curves.fastOutSlowIn.flipped,
             ),
           ))
           .value,
@@ -196,7 +196,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
             .animate(CurvedAnimation(
               parent: animation,
               curve: Curves.fastOutSlowIn,
-              reverseCurve: Curves.fastOutSlowIn,
+              reverseCurve: Curves.fastOutSlowIn.flipped,
             ))
             .value,
         child: FadeTransition(
@@ -213,7 +213,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
             reverseCurve: Interval(
               0.4,
               0.8,
-              curve: Curves.fastOutSlowIn,
+              curve: Curves.fastOutSlowIn.flipped,
             ),
           )),
           child: child,
@@ -239,7 +239,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
           .animate(CurvedAnimation(
             parent: animation,
             curve: Curves.fastOutSlowIn,
-            reverseCurve: Curves.fastOutSlowIn,
+            reverseCurve: Curves.fastOutSlowIn.flipped,
           ))
           .value,
       child: SizeTransition(
@@ -256,7 +256,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
           reverseCurve: Interval(
             0.2,
             1.0,
-            curve: Curves.fastOutSlowIn,
+            curve: Curves.fastOutSlowIn.flipped,
           ),
         )),
         child: SizeTransition(
@@ -274,7 +274,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
             reverseCurve: Interval(
               0.2,
               1.0,
-              curve: Curves.fastOutSlowIn,
+              curve: Curves.fastOutSlowIn.flipped,
             ),
           )),
           child: FadeTransition(
@@ -291,7 +291,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
               reverseCurve: Interval(
                 0.4,
                 0.8,
-                curve: Curves.fastOutSlowIn,
+                curve: Curves.fastOutSlowIn.flipped,
               ),
             )),
             child: child,
