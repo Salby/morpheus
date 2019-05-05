@@ -5,6 +5,9 @@
 ### Added
 - Added assertions in `MorpheusPageRoute`.
 
+### Changed
+- Changed `MorpheusPageRoute`'s default `transitionDuration`.
+
 ### Removed
 - Removed redundant `SizeTransition` from `MorpheusPageRoute.verticalTransitionsBuilder`.
 

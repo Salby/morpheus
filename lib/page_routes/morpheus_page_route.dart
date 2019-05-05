@@ -11,7 +11,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   MorpheusPageRoute({
     @required this.builder,
     @required this.parentKey,
-    this.transitionDuration = const Duration(milliseconds: 600),
+    this.transitionDuration = const Duration(milliseconds: 550),
     this.elevation = 8.0,
     this.scrimColor = Colors.transparent,
     this.shapeBorderTween,
