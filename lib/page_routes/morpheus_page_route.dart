@@ -259,43 +259,24 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
             curve: Curves.fastOutSlowIn.flipped,
           ),
         )),
-        child: SizeTransition(
-          axis: Axis.horizontal,
-          sizeFactor: Tween<double>(
-            begin: _getSizePercent(context).width,
+        child: FadeTransition(
+          opacity: Tween<double>(
+            begin: 0.0,
             end: 1.0,
           ).animate(CurvedAnimation(
             parent: animation,
             curve: Interval(
-              0.2,
-              1.0,
+              0.4,
+              0.8,
               curve: Curves.fastOutSlowIn,
             ),
             reverseCurve: Interval(
-              0.2,
-              1.0,
+              0.4,
+              0.8,
               curve: Curves.fastOutSlowIn.flipped,
             ),
           )),
-          child: FadeTransition(
-            opacity: Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(CurvedAnimation(
-              parent: animation,
-              curve: Interval(
-                0.4,
-                0.8,
-                curve: Curves.fastOutSlowIn,
-              ),
-              reverseCurve: Interval(
-                0.4,
-                0.8,
-                curve: Curves.fastOutSlowIn.flipped,
-              ),
-            )),
-            child: child,
-          ),
+          child: child,
         ),
       ),
     );

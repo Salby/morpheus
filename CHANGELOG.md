@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Removed
+- Removed redundant `SizeTransition` from `MorpheusPageRoute.verticalTransitionsBuilder`.
+
 ## [0.6.3] - 2019-04-27
 
 ### Changed
