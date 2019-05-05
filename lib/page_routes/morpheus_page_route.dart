@@ -16,7 +16,12 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     this.scrimColor = Colors.transparent,
     this.shapeBorderTween,
     this.transitionColor,
-  })  : renderBoxOffset = _getOffset(parentKey),
+  })  : assert(builder != null),
+        assert(parentKey != null),
+        assert(transitionDuration != null),
+        assert(elevation != null),
+        assert(scrimColor != null),
+        renderBoxOffset = _getOffset(parentKey),
         renderBoxSize = _getSize(parentKey);
 
   final WidgetBuilder builder;

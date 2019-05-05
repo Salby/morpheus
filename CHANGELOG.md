@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- Added assertions in `MorpheusPageRoute`.
+
 ### Removed
 - Removed redundant `SizeTransition` from `MorpheusPageRoute.verticalTransitionsBuilder`.
 
