@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.6.4]
+## [0.6.4] - 2019-05-05
 
 ### Added
 - Added assertions in `MorpheusPageRoute`.
