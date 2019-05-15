@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:morpheus/morpheus.dart';
 
 void main() => runApp(ExampleApp());
@@ -8,6 +9,11 @@ class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Morpheus example',
+      theme: ThemeData(
+        primaryColor: Colors.deepPurple,
+        primarySwatch: Colors.deepPurple,
+        accentColor: Colors.tealAccent,
+      ),
       home: TabScreen(),
     );
   }
@@ -28,29 +34,35 @@ class _TabScreenState extends State<TabScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: MorpheusTabView(
-        child: _screens[_currentIndex],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor: Theme.of(context).canvasColor,
+        systemNavigationBarIconBrightness: Brightness.dark,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          if (index != _currentIndex) setState(() => _currentIndex = index);
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up),
-            title: Text('Trending'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.timer),
-            title: Text('New'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            title: Text('Saved'),
-          ),
-        ],
+      child: Scaffold(
+        body: MorpheusTabView(
+          child: _screens[_currentIndex],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            if (index != _currentIndex) setState(() => _currentIndex = index);
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.trending_up),
+              title: Text('Trending'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.timer),
+              title: Text('New'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.star),
+              title: Text('Saved'),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -72,6 +84,7 @@ class ListScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final parentKey = GlobalKey();
           return ListTile(
+            key: parentKey,
             leading: CircleAvatar(child: Text('${index + 1}')),
             title: Text('$contentType ${index + 1}'),
             onTap: () => _handleTap(context, index + 1, parentKey),

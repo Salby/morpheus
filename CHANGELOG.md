@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.5] - 2019-05-15
+
+### Changed
+- Improved `MorpheusTabView` opacity and scale tweens.
+- Improved example.
+
 ## [0.6.4] - 2019-05-05
 
 ### Added

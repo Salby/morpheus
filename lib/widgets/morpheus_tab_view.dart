@@ -55,9 +55,9 @@ class _TopLevelOpacityTween extends Tween<double> {
 
   double lerp(double t) {
     if (t < 1.0 / 3) {
-      return lerpDouble(1.0, 0.0, t);
+      return lerpDouble(1.0, 0.0, t * 3);
     } else {
-      return lerpDouble(0.0, 1.0, t);
+      return lerpDouble(0.0, 1.0, (t - 1.0 / 3) * 1.5);
     }
   }
 }
@@ -70,7 +70,7 @@ class _TopLevelScaleTween extends Tween<double> {
     if (t < 1.0 / 3) {
       return 1.0;
     } else {
-      return lerpDouble(0.95, 1.0, t);
+      return lerpDouble(0.95, 1.0, (t - 1.0 / 3) * 1.5);
     }
   }
 }
