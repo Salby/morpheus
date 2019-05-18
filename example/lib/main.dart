@@ -36,7 +36,9 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        systemNavigationBarColor: Theme.of(context).canvasColor,
+        statusBarColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
@@ -44,6 +46,7 @@ class _TabScreenState extends State<TabScreen> {
           child: _screens[_currentIndex],
         ),
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
           currentIndex: _currentIndex,
           onTap: (index) {
             if (index != _currentIndex) setState(() => _currentIndex = index);
@@ -76,11 +79,8 @@ class ListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(contentType),
-      ),
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: 20,
         itemBuilder: (context, index) {
           final parentKey = GlobalKey();
           return ListTile(
@@ -98,6 +98,7 @@ class ListScreen extends StatelessWidget {
     await Navigator.of(context).push(MorpheusPageRoute(
       builder: (context) => PostScreen(index),
       parentKey: parentKey,
+      scrimColor: Theme.of(context).scaffoldBackgroundColor,
     ));
     return;
   }
@@ -111,7 +112,6 @@ class PostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
       body: Center(
         child: Text(
           'Post $index',

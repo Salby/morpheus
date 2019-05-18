@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+- Changed `MorpheusPageRoute`'s default `transitionDuration` from 550 milliseconds to 500 milliseconds.
+
 ## [0.6.5] - 2019-05-15
 
 ### Changed
