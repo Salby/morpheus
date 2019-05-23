@@ -119,12 +119,6 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    try {
-      _renderBoxOffset = _getOffset(parentKey);
-      _renderBoxSize = _getSize(parentKey);
-    } catch (e) {
-      print('Did not find renderBox. Do not be alarmed.');
-    }
     return Container(
       color: ColorTween(
         begin: scrimColor.withOpacity(0.0),
