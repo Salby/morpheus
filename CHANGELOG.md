@@ -1,9 +1,12 @@
 # Changelog
 
-## [Unreleased]
+## [0.6.6] - 2019-05-23
+
+### Added
+- Added some more documentation for `MorpheusPageRoute`.
 
 ### Changed
-- Changed `MorpheusPageRoute`'s default `transitionDuration` from 550 milliseconds to 500 milliseconds.
+- Changed `MorpheusPageRoute`'s elevation animation curves.
 
 ## [0.6.5] - 2019-05-15
 

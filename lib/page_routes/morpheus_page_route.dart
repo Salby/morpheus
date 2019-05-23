@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import '../utils/offset_to_alignment.dart';
 
-/// PageRouteBuilder that uses a parent-child transition.
+/// PageRoute that implements a parent-child transition as defined in the
+/// Material Design guidelines.
 ///
-/// [parentKey] is a key that is attached to the widget you
-/// want to animate from.
-/// You can change the duration if you want to adjust the
-/// speed of the transition.
+/// The type `T` specifies the return type of the route which can be supplied
+/// as the route is popped from the stack via [Navigator.pop] by providing the
+/// optional `result` argument.
 class MorpheusPageRoute<T> extends PageRoute<T> {
+  /// Construct a MorpheusPageRoute whose contents are defined by [builder].
+  ///
+  /// The values of [builder], [parentKey], [transitionDuration], [elevation],
+  /// and [scrimColor] must not be null.
   MorpheusPageRoute({
     @required this.builder,
     @required this.parentKey,
-    this.transitionDuration = const Duration(milliseconds: 500),
+    this.transitionDuration = const Duration(milliseconds: 550),
     this.elevation = 8.0,
     this.scrimColor = Colors.transparent,
     this.shapeBorderTween,
@@ -21,17 +25,38 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         assert(transitionDuration != null),
         assert(elevation != null),
         assert(scrimColor != null),
-        renderBoxOffset = _getOffset(parentKey),
-        renderBoxSize = _getSize(parentKey);
+        _renderBoxOffset = _getOffset(parentKey),
+        _renderBoxSize = _getSize(parentKey);
 
+  /// Builds the contents of the route.
   final WidgetBuilder builder;
+
+  /// A [GlobalKey] that is used to calculate the transition so that it looks
+  /// like the element that [parentKey] is attached to turns into a new page
+  /// with the contents of [builder].
   final GlobalKey parentKey;
+
+  /// Defines the elevation of the MorpheusPageRoute at the end of the
+  /// transition.
   final double elevation;
+
+  /// Creates an overlay that covers the content outside of the
+  /// MorpheusPageRoute.
   final Color scrimColor;
-  final Offset renderBoxOffset;
-  final Size renderBoxSize;
+
+  /// Defines a transition between shapes, useful if you're transitioning from
+  /// a shape other than a rectangle, e.g. a circle.
   final ShapeBorderTween shapeBorderTween;
+
+  /// The color that is used when transitioning from the parent element to the
+  /// contents of [builder].
   final Color transitionColor;
+
+  /// Used to calculate the transition's [Offset]
+  Offset _renderBoxOffset;
+
+  /// Used to calculate the transition's [Size]
+  Size _renderBoxSize;
 
   static RenderBox _findRenderBox(GlobalKey parentKey) =>
       parentKey.currentContext.findRenderObject();
@@ -46,7 +71,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
 
   Size _getSizePercent(BuildContext context) {
     final Size displaySize = MediaQuery.of(context).size;
-    final Size boxSize = renderBoxSize;
+    final Size boxSize = _renderBoxSize;
     final percentSize = Size(
       boxSize.width != displaySize.width
           ? boxSize.width / displaySize.width
@@ -61,9 +86,9 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   Alignment _getAlignment(BuildContext context) {
     final Size displaySize = MediaQuery.of(context).size;
     final Alignment alignment = offsetToAlignment(
-        renderBoxOffset,
-        Size(displaySize.width - renderBoxSize.width,
-            displaySize.height - renderBoxSize.height));
+        _renderBoxOffset,
+        Size(displaySize.width - _renderBoxSize.width,
+            displaySize.height - _renderBoxSize.height));
     return alignment;
   }
 
@@ -94,6 +119,12 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
+    try {
+      _renderBoxOffset = _getOffset(parentKey);
+      _renderBoxSize = _getSize(parentKey);
+    } catch (e) {
+      print('Did not find renderBox. Do not be alarmed.');
+    }
     return Container(
       color: ColorTween(
         begin: scrimColor.withOpacity(0.0),
@@ -133,12 +164,12 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
               ),
             )),
 
-            /// If [renderBoxOffset.dx] is 0, build a
+            /// If [_renderBoxOffset.dx] is 0, build a
             /// vertical-only transition. If not, build a
             /// bidirectional transition that isn't as nice,
             /// but is more consistent with different sizes
             /// and offsets.
-            child: renderBoxOffset.dx == 0
+            child: _renderBoxOffset.dx == 0
                 ? _verticalTransitionsBuilder(
                     context, animation, secondaryAnimation, child)
                 : _bidirectionalTransitionsBuilder(
@@ -154,7 +185,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
       Widget child) {
     return Container(
       width: Tween<double>(
-        begin: renderBoxSize.width,
+        begin: _renderBoxSize.width,
         end: MediaQuery.of(context).size.width,
       )
           .animate(CurvedAnimation(
@@ -172,7 +203,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
           ))
           .value,
       height: Tween<double>(
-        begin: renderBoxSize.height,
+        begin: _renderBoxSize.height,
         end: MediaQuery.of(context).size.height,
       )
           .animate(CurvedAnimation(
@@ -200,8 +231,16 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         )
             .animate(CurvedAnimation(
               parent: animation,
-              curve: Curves.fastOutSlowIn,
-              reverseCurve: Curves.fastOutSlowIn.flipped,
+              curve: Interval(
+                0.2,
+                1.0,
+                curve: Curves.fastOutSlowIn,
+              ),
+              reverseCurve: Interval(
+                0.2,
+                1.0,
+                curve: Curves.fastOutSlowIn.flipped,
+              ),
             ))
             .value,
         child: FadeTransition(
@@ -243,8 +282,16 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
       )
           .animate(CurvedAnimation(
             parent: animation,
-            curve: Curves.fastOutSlowIn,
-            reverseCurve: Curves.fastOutSlowIn.flipped,
+            curve: Interval(
+              0.2,
+              1.0,
+              curve: Curves.fastOutSlowIn,
+            ),
+            reverseCurve: Interval(
+              0.8,
+              1.0,
+              curve: Curves.fastOutSlowIn.flipped,
+            ),
           ))
           .value,
       child: SizeTransition(

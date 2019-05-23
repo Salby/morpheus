@@ -98,6 +98,7 @@ class ListScreen extends StatelessWidget {
     await Navigator.of(context).push(MorpheusPageRoute(
       builder: (context) => PostScreen(index),
       parentKey: parentKey,
+      transitionColor: Theme.of(context).scaffoldBackgroundColor,
       scrimColor: Theme.of(context).scaffoldBackgroundColor,
     ));
     return;
