@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.7] - 2019-05-26
+
+### Changed
+- Changed scrim animation interval.
+
 ## [0.6.6] - 2019-05-23
 
 ### Added
