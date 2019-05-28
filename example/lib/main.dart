@@ -99,7 +99,8 @@ class ListScreen extends StatelessWidget {
       builder: (context) => PostScreen(index),
       parentKey: parentKey,
       transitionColor: Theme.of(context).scaffoldBackgroundColor,
-      scrimColor: Theme.of(context).scaffoldBackgroundColor,
+      //scrimColor: Theme.of(context).scaffoldBackgroundColor,
+      transitionDuration: Duration(milliseconds: 500),
     ));
     return;
   }
@@ -113,6 +114,9 @@ class PostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Post'),
+      ),
       body: Center(
         child: Text(
           'Post $index',
