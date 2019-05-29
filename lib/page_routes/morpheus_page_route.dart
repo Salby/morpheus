@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/offset_to_alignment.dart';
+import '../tweens/vertical_transition_child_tween.dart';
+import '../tweens/vertical_transition_opacity_tween.dart';
 
 /// PageRoute that implements a parent-child transition as defined in the
 /// Material Design guidelines.
@@ -15,7 +17,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   MorpheusPageRoute({
     @required this.builder,
     @required this.parentKey,
-    this.transitionDuration = const Duration(milliseconds: 550),
+    this.transitionDuration = const Duration(milliseconds: 500),
     this.elevation = 8.0,
     this.scrimColor = Colors.transparent,
     this.shapeBorderTween,
@@ -69,20 +71,6 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     return _findRenderBox(parentKey).size;
   }
 
-  Size _getSizePercent(BuildContext context) {
-    final Size displaySize = MediaQuery.of(context).size;
-    final Size boxSize = _renderBoxSize;
-    final percentSize = Size(
-      boxSize.width != displaySize.width
-          ? boxSize.width / displaySize.width
-          : 1.0,
-      boxSize.height != displaySize.height
-          ? boxSize.height / displaySize.height
-          : 1.0,
-    );
-    return percentSize;
-  }
-
   Alignment _getAlignment(BuildContext context) {
     final Size displaySize = MediaQuery.of(context).size;
     final Alignment alignment = offsetToAlignment(
@@ -90,6 +78,10 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         Size(displaySize.width - _renderBoxSize.width,
             displaySize.height - _renderBoxSize.height));
     return alignment;
+  }
+
+  Widget _getWidget() {
+    return parentKey.currentWidget;
   }
 
   @override
@@ -139,36 +131,18 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
           ))
           .value,
       child: Align(
-        alignment: _getAlignment(context),
-        child: FadeTransition(
-            opacity: Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(CurvedAnimation(
-              parent: animation,
-              curve: Interval(
-                0.0,
-                0.4,
-                curve: Curves.fastOutSlowIn,
-              ),
-              reverseCurve: Interval(
-                0.0,
-                0.4,
-                curve: Curves.fastOutSlowIn.flipped,
-              ),
-            )),
+          alignment: _getAlignment(context),
 
-            /// If [_renderBoxOffset.dx] is 0, build a
-            /// vertical-only transition. If not, build a
-            /// bidirectional transition that isn't as nice,
-            /// but is more consistent with different sizes
-            /// and offsets.
-            child: _renderBoxOffset.dx == 0
-                ? _verticalTransitionsBuilder(
-                    context, animation, secondaryAnimation, child)
-                : _bidirectionalTransitionsBuilder(
-                    context, animation, secondaryAnimation, child)),
-      ),
+          /// If [_renderBoxOffset.dx] is 0, build a
+          /// vertical-only transition. If not, build a
+          /// bidirectional transition that isn't as nice,
+          /// but is more consistent with different sizes
+          /// and offsets.
+          child: _renderBoxOffset.dx == 0
+              ? _verticalTransitionsBuilder(
+                  context, animation, secondaryAnimation, child)
+              : _bidirectionalTransitionsBuilder(
+                  context, animation, secondaryAnimation, child)),
     );
   }
 
@@ -177,46 +151,118 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
       Animation<double> animation,
       Animation<double> secondaryAnimation,
       Widget child) {
-    return Container(
-      width: Tween<double>(
-        begin: _renderBoxSize.width,
-        end: MediaQuery.of(context).size.width,
-      )
-          .animate(CurvedAnimation(
-            parent: animation,
-            curve: Interval(
-              0.2,
-              1.0,
-              curve: Curves.fastOutSlowIn,
-            ),
-            reverseCurve: Interval(
-              0.2,
-              1.0,
-              curve: Curves.fastOutSlowIn.flipped,
-            ),
-          ))
-          .value,
-      height: Tween<double>(
-        begin: _renderBoxSize.height,
-        end: MediaQuery.of(context).size.height,
-      )
-          .animate(CurvedAnimation(
-            parent: animation,
-            curve: Interval(
-              0.2,
-              1.0,
-              curve: Curves.fastOutSlowIn,
-            ),
-            reverseCurve: Interval(
-              0.2,
-              1.0,
-              curve: Curves.fastOutSlowIn.flipped,
-            ),
-          ))
-          .value,
+    return FadeTransition(
+      opacity: Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(CurvedAnimation(
+        parent: animation,
+        curve: Interval(
+          0.0,
+          0.4,
+          curve: Curves.fastOutSlowIn,
+        ),
+        reverseCurve: Interval(
+          0.0,
+          0.4,
+          curve: Curves.fastOutSlowIn.flipped,
+        ),
+      )),
+      child: Container(
+        width: Tween<double>(
+          begin: _renderBoxSize.width,
+          end: MediaQuery.of(context).size.width,
+        )
+            .animate(CurvedAnimation(
+              parent: animation,
+              curve: Interval(
+                0.2,
+                1.0,
+                curve: Curves.fastOutSlowIn,
+              ),
+              reverseCurve: Interval(
+                0.2,
+                1.0,
+                curve: Curves.fastOutSlowIn.flipped,
+              ),
+            ))
+            .value,
+        height: Tween<double>(
+          begin: _renderBoxSize.height,
+          end: MediaQuery.of(context).size.height,
+        )
+            .animate(CurvedAnimation(
+              parent: animation,
+              curve: Interval(
+                0.2,
+                1.0,
+                curve: Curves.fastOutSlowIn,
+              ),
+              reverseCurve: Interval(
+                0.2,
+                1.0,
+                curve: Curves.fastOutSlowIn.flipped,
+              ),
+            ))
+            .value,
+        child: Material(
+          type: MaterialType.card,
+          clipBehavior: Clip.antiAlias,
+          color: transitionColor,
+          shape: _shapeBorderTween(animation).value,
+          elevation: Tween<double>(
+            begin: 0.0,
+            end: elevation,
+          )
+              .animate(CurvedAnimation(
+                parent: animation,
+                curve: Curves.fastOutSlowIn,
+              ))
+              .value,
+          child: FadeTransition(
+            opacity: Tween<double>(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Interval(
+                0.4,
+                0.8,
+                curve: Curves.fastOutSlowIn,
+              ),
+              reverseCurve: Interval(
+                0.4,
+                0.8,
+                curve: Curves.fastOutSlowIn.flipped,
+              ),
+            )),
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _verticalTransitionsBuilder(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return FadeTransition(
+      opacity: Tween<double>(
+        begin: 0.0,
+        end: 1.0,
+      ).animate(CurvedAnimation(
+        parent: animation,
+        curve: Interval(
+          0.0, 0.1,
+          curve: Curves.fastOutSlowIn,
+        ),
+      )),
       child: Material(
-        type: MaterialType.card,
         clipBehavior: Clip.antiAlias,
+        type: MaterialType.card,
         color: transitionColor,
         shape: _shapeBorderTween(animation).value,
         elevation: Tween<double>(
@@ -228,86 +274,60 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
               curve: Curves.fastOutSlowIn,
             ))
             .value,
-        child: FadeTransition(
-          opacity: Tween<double>(
-            begin: 0.0,
-            end: 1.0,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Interval(
-              0.4,
-              0.8,
+        child: Container(
+          height: Tween<double>(
+            begin: _renderBoxSize.height,
+            end: MediaQuery.of(context).size.height,
+          )
+              .animate(CurvedAnimation(
+                parent: animation,
+                curve: Curves.fastOutSlowIn,
+              ))
+              .value,
+          child: FadeTransition(
+            opacity: VerticalTransitionOpacityTween(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(CurvedAnimation(
+              parent: animation,
               curve: Curves.fastOutSlowIn,
-            ),
-            reverseCurve: Interval(
-              0.4,
-              0.8,
-              curve: Curves.fastOutSlowIn.flipped,
-            ),
-          )),
-          child: child,
+            )),
+            child: VerticalTransitionChildTween(
+              begin: _verticalTransitionWidget(),
+              end: child,
+            )
+                .animate(CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.fastOutSlowIn,
+                ))
+                .value,
+          ),
         ),
       ),
     );
   }
 
-  Widget _verticalTransitionsBuilder(
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      type: MaterialType.card,
-      color: transitionColor,
-      shape: _shapeBorderTween(animation).value,
-      elevation: Tween<double>(
-        begin: 0.0,
-        end: elevation,
-      )
-          .animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.fastOutSlowIn,
-          ))
-          .value,
-      child: SizeTransition(
-        sizeFactor: Tween<double>(
-          begin: _getSizePercent(context).height,
-          end: 1.0,
-        ).animate(CurvedAnimation(
-          parent: animation,
-          curve: Interval(
-            0.2,
-            1.0,
-            curve: Curves.fastOutSlowIn,
-          ),
-          reverseCurve: Interval(
-            0.2,
-            1.0,
-            curve: Curves.fastOutSlowIn.flipped,
-          ),
-        )),
-        child: FadeTransition(
-          opacity: Tween<double>(
-            begin: 0.0,
-            end: 1.0,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Interval(
-              0.4,
-              0.8,
-              curve: Curves.fastOutSlowIn,
-            ),
-            reverseCurve: Interval(
-              0.4,
-              0.8,
-              curve: Curves.fastOutSlowIn.flipped,
-            ),
-          )),
-          child: child,
-        ),
-      ),
-    );
+  Widget _verticalTransitionWidget() {
+    final Widget parentWidget = _getWidget();
+    if (parentWidget is ListTile) {
+      return ListTile(
+        onTap: () => null,
+        trailing: parentWidget.trailing,
+        title: parentWidget.title,
+        contentPadding: parentWidget.contentPadding,
+        isThreeLine: parentWidget.isThreeLine,
+        subtitle: parentWidget.subtitle,
+        leading: parentWidget.leading,
+        dense: parentWidget.dense,
+        enabled: parentWidget.enabled,
+        onLongPress: () => null,
+        selected: parentWidget.selected,
+      );
+    } else {
+      return Container(
+        color: transitionColor,
+      );
+    }
   }
 
   Animation<ShapeBorder> _shapeBorderTween(Animation<double> animation) {

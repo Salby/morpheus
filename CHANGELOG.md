@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Added new tweens dedicated to vertical transitions in `MorpheusPageRoute`.
+
+### Changed
+- Changed `MorpheusPageRoute`'s default `transitionDuration` from `550` to `500`.
+
 ## [0.6.7] - 2019-05-26
 
 ### Changed

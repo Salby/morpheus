@@ -36,7 +36,7 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.8),
+        statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark,
@@ -99,7 +99,6 @@ class ListScreen extends StatelessWidget {
       builder: (context) => PostScreen(index),
       parentKey: parentKey,
       transitionColor: Theme.of(context).scaffoldBackgroundColor,
-      scrimColor: Theme.of(context).scaffoldBackgroundColor,
     ));
     return;
   }
@@ -112,12 +111,15 @@ class PostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(
-          'Post $index',
-          style: Theme.of(context).textTheme.title,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.black12,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Post'),
         ),
+        body: ListScreen('Post'),
       ),
     );
   }
