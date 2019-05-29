@@ -303,7 +303,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                   curve: Curves.fastOutSlowIn.flipped,
                 ),
               )),
-              child: _getWidget(),
+              child: _verticalTransitionWidget(),
             ),
             FadeTransition(
               opacity: Tween<double>(
@@ -326,6 +326,27 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         ),
       ),
     );
+  }
+
+  Widget _verticalTransitionWidget() {
+    final Widget parentWidget = _getWidget();
+    if (parentWidget is ListTile) {
+      return ListTile(
+        onTap: parentWidget.onTap,
+        trailing: parentWidget.trailing,
+        title: parentWidget.title,
+        contentPadding: parentWidget.contentPadding,
+        isThreeLine: parentWidget.isThreeLine,
+        subtitle: parentWidget.subtitle,
+        leading: parentWidget.leading,
+        dense: parentWidget.dense,
+        enabled: parentWidget.enabled,
+        onLongPress: parentWidget.onLongPress,
+        selected: parentWidget.selected,
+      );
+    } else {
+      return Container();
+    }
   }
 
   Animation<ShapeBorder> _shapeBorderTween(Animation<double> animation) {
