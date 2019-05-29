@@ -263,47 +263,59 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    return Material(
-      clipBehavior: Clip.antiAlias,
-      type: MaterialType.card,
-      color: transitionColor,
-      shape: _shapeBorderTween(animation).value,
-      elevation: Tween<double>(
+    return FadeTransition(
+      opacity: Tween<double>(
         begin: 0.0,
-        end: elevation,
-      )
-          .animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.fastOutSlowIn,
-          ))
-          .value,
-      child: Container(
-        height: Tween<double>(
-          begin: _renderBoxSize.height,
-          end: MediaQuery.of(context).size.height,
+        end: 1.0,
+      ).animate(CurvedAnimation(
+        parent: animation,
+        curve: Interval(
+          0.0, 0.1,
+          curve: Curves.fastOutSlowIn,
+        ),
+      )),
+      child: Material(
+        clipBehavior: Clip.antiAlias,
+        type: MaterialType.card,
+        color: transitionColor,
+        shape: _shapeBorderTween(animation).value,
+        elevation: Tween<double>(
+          begin: 0.0,
+          end: elevation,
         )
             .animate(CurvedAnimation(
               parent: animation,
               curve: Curves.fastOutSlowIn,
             ))
             .value,
-        child: FadeTransition(
-          opacity: VerticalTransitionOpacityTween(
-            begin: 0.0,
-            end: 1.0,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.fastOutSlowIn,
-          )),
-          child: VerticalTransitionChildTween(
-            begin: _verticalTransitionWidget(),
-            end: child,
+        child: Container(
+          height: Tween<double>(
+            begin: _renderBoxSize.height,
+            end: MediaQuery.of(context).size.height,
           )
               .animate(CurvedAnimation(
                 parent: animation,
                 curve: Curves.fastOutSlowIn,
               ))
               .value,
+          child: FadeTransition(
+            opacity: VerticalTransitionOpacityTween(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.fastOutSlowIn,
+            )),
+            child: VerticalTransitionChildTween(
+              begin: _verticalTransitionWidget(),
+              end: child,
+            )
+                .animate(CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.fastOutSlowIn,
+                ))
+                .value,
+          ),
         ),
       ),
     );
