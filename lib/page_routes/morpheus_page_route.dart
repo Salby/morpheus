@@ -71,20 +71,6 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     return _findRenderBox(parentKey).size;
   }
 
-  Size _getSizePercent(BuildContext context) {
-    final Size displaySize = MediaQuery.of(context).size;
-    final Size boxSize = _renderBoxSize;
-    final percentSize = Size(
-      boxSize.width != displaySize.width
-          ? boxSize.width / displaySize.width
-          : 1.0,
-      boxSize.height != displaySize.height
-          ? boxSize.height / displaySize.height
-          : 1.0,
-    );
-    return percentSize;
-  }
-
   Alignment _getAlignment(BuildContext context) {
     final Size displaySize = MediaQuery.of(context).size;
     final Alignment alignment = offsetToAlignment(
