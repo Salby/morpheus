@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/offset_to_alignment.dart';
+import '../tweens/vertical_transition_child_tween.dart';
+import '../tweens/vertical_transition_opacity_tween.dart';
 
 /// PageRoute that implements a parent-child transition as defined in the
 /// Material Design guidelines.
@@ -15,7 +17,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   MorpheusPageRoute({
     @required this.builder,
     @required this.parentKey,
-    this.transitionDuration = const Duration(milliseconds: 550),
+    this.transitionDuration = const Duration(milliseconds: 500),
     this.elevation = 8.0,
     this.scrimColor = Colors.transparent,
     this.shapeBorderTween,
@@ -285,44 +287,23 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
               curve: Curves.fastOutSlowIn,
             ))
             .value,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: <Widget>[
-            FadeTransition(
-              opacity: Tween<double>(
-                begin: 1.0,
-                end: 0.0,
-              ).animate(CurvedAnimation(
+        child: FadeTransition(
+          opacity: VerticalTransitionOpacityTween(
+            begin: 0.0,
+            end: 1.0,
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.fastOutSlowIn,
+          )),
+          child: VerticalTransitionChildTween(
+            begin: _verticalTransitionWidget(),
+            end: child,
+          )
+              .animate(CurvedAnimation(
                 parent: animation,
-                curve: Interval(
-                  0.0, 1.0 / 3,
-                  curve: Curves.fastOutSlowIn,
-                ),
-                reverseCurve: Interval(
-                  0.0, 1.0 / 3,
-                  curve: Curves.fastOutSlowIn.flipped,
-                ),
-              )),
-              child: _verticalTransitionWidget(),
-            ),
-            FadeTransition(
-              opacity: Tween<double>(
-                begin: 0.0,
-                end: 1.0,
-              ).animate(CurvedAnimation(
-                parent: animation,
-                curve: Interval(
-                  1.0 / 3, 1.0,
-                  curve: Curves.fastOutSlowIn,
-                ),
-                reverseCurve: Interval(
-                  1.0 / 3, 1.0,
-                  curve: Curves.fastOutSlowIn.flipped,
-                ),
-              )),
-              child: child,
-            ),
-          ],
+                curve: Curves.fastOutSlowIn,
+              ))
+              .value,
         ),
       ),
     );
@@ -332,7 +313,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     final Widget parentWidget = _getWidget();
     if (parentWidget is ListTile) {
       return ListTile(
-        onTap: parentWidget.onTap,
+        onTap: () => null,
         trailing: parentWidget.trailing,
         title: parentWidget.title,
         contentPadding: parentWidget.contentPadding,
@@ -341,11 +322,13 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         leading: parentWidget.leading,
         dense: parentWidget.dense,
         enabled: parentWidget.enabled,
-        onLongPress: parentWidget.onLongPress,
+        onLongPress: () => null,
         selected: parentWidget.selected,
       );
     } else {
-      return Container();
+      return Container(
+        color: transitionColor,
+      );
     }
   }
 
