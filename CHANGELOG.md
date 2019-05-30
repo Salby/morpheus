@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [0.7.0] - 2019-05-30
 
 ### Added
 - Added new tweens dedicated to vertical transitions in `MorpheusPageRoute`.
