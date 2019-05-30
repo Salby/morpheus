@@ -4,6 +4,7 @@
 
 ### Added
 - Added new tweens dedicated to vertical transitions in `MorpheusPageRoute`.
+- Added `transitionToChild` property to `MorpheusPageRoute`.
 
 ### Changed
 - Changed `MorpheusPageRoute`'s default `transitionDuration` from `550` to `500`.

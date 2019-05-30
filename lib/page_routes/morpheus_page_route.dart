@@ -22,6 +22,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     this.scrimColor = Colors.transparent,
     this.shapeBorderTween,
     this.transitionColor,
+    this.transitionToChild = true,
   })  : assert(builder != null),
         assert(parentKey != null),
         assert(transitionDuration != null),
@@ -53,6 +54,12 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// The color that is used when transitioning from the parent element to the
   /// contents of [builder].
   final Color transitionColor;
+
+  /// Defines whether the animation should transition from a temporary widget
+  /// into the contents of [builder] or not.
+  ///
+  /// This only affects vertical transitions.
+  final bool transitionToChild;
 
   /// Used to calculate the transition's [Offset]
   Offset _renderBoxOffset;
@@ -256,7 +263,8 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
       ).animate(CurvedAnimation(
         parent: animation,
         curve: Interval(
-          0.0, 0.1,
+          0.0,
+          0.1,
           curve: Curves.fastOutSlowIn,
         ),
       )),
@@ -284,24 +292,26 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                 curve: Curves.fastOutSlowIn,
               ))
               .value,
-          child: FadeTransition(
-            opacity: VerticalTransitionOpacityTween(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(CurvedAnimation(
-              parent: animation,
-              curve: Curves.fastOutSlowIn,
-            )),
-            child: VerticalTransitionChildTween(
-              begin: _verticalTransitionWidget(),
-              end: child,
-            )
-                .animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.fastOutSlowIn,
-                ))
-                .value,
-          ),
+          child: transitionToChild
+              ? FadeTransition(
+                  opacity: VerticalTransitionOpacityTween(
+                    begin: 0.0,
+                    end: 1.0,
+                  ).animate(CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.fastOutSlowIn,
+                  )),
+                  child: VerticalTransitionChildTween(
+                    begin: _verticalTransitionWidget(),
+                    end: child,
+                  )
+                      .animate(CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.fastOutSlowIn,
+                      ))
+                      .value,
+                )
+              : child,
         ),
       ),
     );
