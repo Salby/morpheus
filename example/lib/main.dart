@@ -13,56 +13,254 @@ class ExampleApp extends StatelessWidget {
         primaryColor: Colors.deepPurple,
         primarySwatch: Colors.deepPurple,
         accentColor: Colors.tealAccent,
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          color: Colors.white,
+          brightness: Brightness.light,
+          textTheme: TextTheme(
+            title: TextStyle(
+              fontSize: 20.0,
+              color: Colors.black87,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: Colors.white,
+          shape: CircularNotchedRectangle(),
+        ),
       ),
-      home: TabScreen(),
+      home: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.white,
+          systemNavigationBarIconBrightness: Brightness.dark,
+          statusBarColor: Colors.transparent,
+          statusBarBrightness: Brightness.light,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+        child: HomeScreen(),
+      ),
     );
   }
 }
 
-class TabScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _TabScreenState createState() => _TabScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _TabScreenState extends State<TabScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
-    ListScreen('Trending'),
-    ListScreen('New'),
-    ListScreen('Saved'),
+    FeedScreen(),
+    ProfileScreen(),
   ];
   int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+    return Scaffold(
+      body: MorpheusTabView(
+        child: _screens[_currentIndex],
       ),
-      child: Scaffold(
-        body: MorpheusTabView(
-          child: _screens[_currentIndex],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            if (index != _currentIndex) setState(() => _currentIndex = index);
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.trending_up),
-              title: Text('Trending'),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.view_agenda),
+            title: Text('Feed'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_box),
+            title: Text('Profile'),
+          ),
+        ],
+        onTap: (index) {
+          if (index != _currentIndex) setState(() => _currentIndex = index);
+        },
+      ),
+    );
+  }
+}
+
+class ProfileScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 128.0,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.all(18.0),
+              title: Text(
+                'Profile',
+                style: Theme.of(context).appBarTheme.textTheme.title,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.timer),
-              title: Text('New'),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Divider(height: 1.0),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 112.0 + 32.0,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(16.0),
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 3,
+                  separatorBuilder: (context, index) => SizedBox(width: 16.0),
+                  itemBuilder: (context, index) {
+                    final double unit =
+                        (MediaQuery.of(context).size.width - 16.0 * 4) / 3;
+                    return Container(
+                      width: unit,
+                      height: unit,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.grey[300],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Divider(height: 0.0),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 112.0 + 32.0,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(16.0),
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 3,
+                  separatorBuilder: (context, index) => SizedBox(width: 16.0),
+                  itemBuilder: (context, index) {
+                    final double unit =
+                        (MediaQuery.of(context).size.width - 16.0 * 4) / 3;
+                    return Container(
+                      width: unit,
+                      height: unit,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.grey[300],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Divider(height: 0.0),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FeedScreen extends StatelessWidget {
+  final List<String> _titles = [
+    'This is a title',
+    'Hey, another title!',
+    'Did you know this about that?',
+    'Wow, what a title!',
+    'This is a title',
+    'Hey, another title!',
+    'Did you know this about that?',
+    'Wow, what a title!',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 128.0,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.all(18.0),
+              title: Text(
+                'Feed',
+                style: Theme.of(context).appBarTheme.textTheme.title,
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.star),
-              title: Text('Saved'),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Divider(height: 1.0),
+              ListView.separated(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final parentKey = GlobalKey();
+                  return PostHeader(
+                    key: parentKey,
+                    title: _titles[index],
+                    onTap: () => _showPost(context, parentKey, _titles[index]),
+                  );
+                },
+                separatorBuilder: (context, index) => Divider(
+                      height: 0.0,
+                    ),
+                itemCount: _titles.length,
+              ),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPost(BuildContext context, GlobalKey parentKey, String title) {
+    Navigator.of(context).push(MorpheusPageRoute(
+      builder: (context) => PostScreen(
+            title: title,
+          ),
+      parentKey: parentKey,
+      transitionDuration: Duration(milliseconds: 300),
+      transitionToChild: false,
+    ));
+  }
+}
+
+class PostHeader extends StatelessWidget {
+  PostHeader({
+    Key key,
+    this.title,
+    this.onTap,
+  }) : super(key: key);
+
+  final String title;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              height: 156.0,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+            SizedBox(height: 16.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 2.0),
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.title,
+              ),
             ),
           ],
         ),
@@ -71,56 +269,81 @@ class _TabScreenState extends State<TabScreen> {
   }
 }
 
-class ListScreen extends StatelessWidget {
-  ListScreen(this.contentType);
+class PostScreen extends StatefulWidget {
+  PostScreen({
+    Key key,
+    this.title,
+  }) : super(key: key);
 
-  final String contentType;
+  final String title;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView.builder(
-        itemCount: 20,
-        itemBuilder: (context, index) {
-          final parentKey = GlobalKey();
-          return ListTile(
-            key: parentKey,
-            leading: CircleAvatar(child: Text('${index + 1}')),
-            title: Text('$contentType ${index + 1}'),
-            onTap: () => _handleTap(context, index + 1, parentKey),
-          );
-        },
-      ),
-    );
-  }
-
-  Future<void> _handleTap(context, int index, GlobalKey parentKey) async {
-    await Navigator.of(context).push(MorpheusPageRoute(
-      builder: (context) => PostScreen(index),
-      parentKey: parentKey,
-      transitionColor: Theme.of(context).scaffoldBackgroundColor,
-    ));
-    return;
-  }
+  _PostScreenState createState() => _PostScreenState();
 }
 
-class PostScreen extends StatelessWidget {
-  PostScreen(this.index);
+class _PostScreenState extends State<PostScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController controller;
+  Animation<double> height;
+  bool display = true;
 
-  final int index;
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+    height = Tween<double>(
+      begin: 0.0,
+      end: 80.0,
+    ).animate(CurvedAnimation(
+      parent: controller,
+      curve: Curves.fastOutSlowIn,
+    ))
+      ..addListener(() {
+        setState(() {});
+      });
+    play();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Colors.black12,
-      ),
+    return WillPopScope(
+      onWillPop: () {
+        controller.reverse();
+        Navigator.of(context).pop();
+      },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Post'),
+        body: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Container(
+              height: height.value,
+              padding: const EdgeInsets.only(left: 8.0),
+            ),
+            PostHeader(
+              title: widget.title,
+            ),
+            Container(
+              height: 256.0,
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            ),
+          ],
         ),
-        body: ListScreen('Post'),
       ),
     );
+  }
+
+  void play() {
+    setState(() => display = true);
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 }
