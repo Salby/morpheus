@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.7.1] - 2019-05-31
+
+### Changed
+- Changed `MorpheusPageRoute`'s vertical transition so that the child screen isn't resized when animating.
+
 ## [0.7.0] - 2019-05-30
 
 ### Added

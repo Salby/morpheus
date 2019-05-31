@@ -224,6 +224,7 @@ class FeedScreen extends StatelessWidget {
       parentKey: parentKey,
       transitionDuration: Duration(milliseconds: 300),
       transitionToChild: false,
+      scrimColor: Theme.of(context).scaffoldBackgroundColor,
     ));
   }
 }
@@ -300,6 +301,7 @@ class _PostScreenState extends State<PostScreen>
     ).animate(CurvedAnimation(
       parent: controller,
       curve: Curves.fastOutSlowIn,
+      reverseCurve: Curves.fastOutSlowIn.flipped,
     ))
       ..addListener(() {
         setState(() {});
@@ -332,6 +334,26 @@ class _PostScreenState extends State<PostScreen>
             ),
           ],
         ),
+        bottomNavigationBar: BottomAppBar(
+          child: Container(
+            height: kToolbarHeight,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.more_vert),
+                  tooltip: 'Actions',
+                  onPressed: () => null,
+                ),
+              ],
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.favorite_border),
+          onPressed: () => null,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       ),
     );
   }
