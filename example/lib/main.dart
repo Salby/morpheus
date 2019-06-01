@@ -116,12 +116,21 @@ class ProfileScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final double unit =
                         (MediaQuery.of(context).size.width - 16.0 * 4) / 3;
+                    final _key = GlobalKey();
                     return Container(
+                      key: _key,
                       width: unit,
                       height: unit,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8.0),
                         color: Colors.grey[300],
+                      ),
+                      child: Material(
+                        type: MaterialType.transparency,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: () => _showPost(context, _key, 'Saved'),
+                        ),
                       ),
                     );
                   },
@@ -158,6 +167,16 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _showPost(BuildContext context, GlobalKey parentKey, String title) {
+    Navigator.of(context).push(MorpheusPageRoute(
+      builder: (context) => PostScreen(
+        title: title,
+      ),
+      parentKey: parentKey,
+      scrimColor: Theme.of(context).scaffoldBackgroundColor,
+    ));
   }
 }
 
