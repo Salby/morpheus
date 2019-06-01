@@ -23,13 +23,15 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     this.shapeBorderTween,
     this.transitionColor,
     this.transitionToChild = true,
+    RouteSettings settings,
   })  : assert(builder != null),
         assert(parentKey != null),
         assert(transitionDuration != null),
         assert(elevation != null),
         assert(scrimColor != null),
         _renderBoxOffset = _getOffset(parentKey),
-        _renderBoxSize = _getSize(parentKey);
+        _renderBoxSize = _getSize(parentKey),
+        super(settings: settings);
 
   /// Builds the contents of the route.
   final WidgetBuilder builder;

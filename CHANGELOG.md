@@ -1,6 +1,9 @@
 # Changelog
 
-## [Unreleased]
+## [0.8.0] - 2019-06-01
+
+### Added
+- Added `RouteSettings` to `MorpheusPageRoute`.
 
 ### Changed
 - Changed `MorpheusPageRoute`'s bidirectional transition so that the child screen is clipped instead of begin resized when animating.
