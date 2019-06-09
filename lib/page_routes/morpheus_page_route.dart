@@ -230,22 +230,43 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                 physics: NeverScrollableScrollPhysics(),
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  child: transitionToChild
-                      ? FadeTransition(
-                          opacity: Tween<double>(
-                            begin: 0.0,
-                            end: 1.0,
-                          ).animate(CurvedAnimation(
-                            parent: animation,
-                            curve: Interval(
-                              0.4,
-                              0.8,
-                              curve: Curves.fastOutSlowIn,
-                            ),
-                          )),
-                          child: child,
-                        )
-                      : child,
+                  child: Transform.translate(
+                    offset: Offset(
+                      Tween<double>(
+                        begin: -(_renderBoxOffset.dx),
+                        end: 0.0,
+                      ).animate(CurvedAnimation(
+                        parent: animation,
+                        curve: Interval(
+                          0.2,
+                          1.0,
+                          curve: Curves.fastOutSlowIn,
+                        ),
+                        reverseCurve: Interval(
+                          0.2,
+                          1.0,
+                          curve: Curves.fastOutSlowIn.flipped,
+                        ),
+                      )).value,
+                      0.0,
+                    ),
+                    child: transitionToChild
+                        ? FadeTransition(
+                            opacity: Tween<double>(
+                              begin: 0.0,
+                              end: 1.0,
+                            ).animate(CurvedAnimation(
+                              parent: animation,
+                              curve: Interval(
+                                0.4,
+                                0.8,
+                                curve: Curves.fastOutSlowIn,
+                              ),
+                            )),
+                            child: child,
+                          )
+                        : child,
+                  ),
                 ),
               ),
             ),
