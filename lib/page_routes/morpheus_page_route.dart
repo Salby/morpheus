@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/offset_to_alignment.dart';
+import '../utils/alignment_from_offset.dart';
 import '../tweens/vertical_transition_child_tween.dart';
 import '../tweens/vertical_transition_opacity_tween.dart';
 
@@ -80,11 +80,14 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
 
   Alignment _getAlignment(BuildContext context) {
     final Size displaySize = MediaQuery.of(context).size;
-    final Alignment alignment = offsetToAlignment(
-        _renderBoxOffset,
-        Size(displaySize.width - _renderBoxSize.width,
-            displaySize.height - _renderBoxSize.height));
-    return alignment;
+    final alignment = AlignmentFromOffset(
+      _renderBoxOffset,
+      Size(
+        displaySize.width - _renderBoxSize.width,
+        displaySize.height - _renderBoxSize.height,
+      ),
+    );
+    return alignment.alignment;
   }
 
   Widget _getWidget() {
