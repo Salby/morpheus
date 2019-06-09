@@ -215,7 +215,63 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
               ),
             ))
             .value,
-        child: _buildChild(context, animation, secondaryAnimation, child),
+        child: Material(
+          type: MaterialType.card,
+          clipBehavior: Clip.antiAlias,
+          shape: _shapeBorderTween(animation).value,
+          color: transitionColor ?? Theme.of(context).cardColor,
+          elevation: _materialElevation(animation),
+          child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: NeverScrollableScrollPhysics(),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Transform.translate(
+                    offset: Offset(
+                      Tween<double>(
+                        begin: -(_renderBoxOffset.dx),
+                        end: 0.0,
+                      ).animate(CurvedAnimation(
+                        parent: animation,
+                        curve: Interval(
+                          0.2,
+                          1.0,
+                          curve: Curves.fastOutSlowIn,
+                        ),
+                        reverseCurve: Interval(
+                          0.2,
+                          1.0,
+                          curve: Curves.fastOutSlowIn.flipped,
+                        ),
+                      )).value,
+                      0.0,
+                    ),
+                    child: transitionToChild
+                        ? FadeTransition(
+                            opacity: Tween<double>(
+                              begin: 0.0,
+                              end: 1.0,
+                            ).animate(CurvedAnimation(
+                              parent: animation,
+                              curve: Interval(
+                                0.4,
+                                0.8,
+                                curve: Curves.fastOutSlowIn,
+                              ),
+                            )),
+                            child: child,
+                          )
+                        : child,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -239,90 +295,34 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         ),
       )),
       child: Container(
-        height: Tween<double>(
-          begin: _renderBoxSize.height,
-          end: MediaQuery.of(context).size.height,
-        )
-            .animate(CurvedAnimation(
-              parent: animation,
-              curve: Curves.fastOutSlowIn,
-              reverseCurve: Curves.fastOutSlowIn.flipped,
-            ))
-            .value,
-        child: _buildChild(context, animation, secondaryAnimation, child),
-      ),
-    );
-  }
-
-  Widget _buildChild(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
-    return Material(
-      type: MaterialType.card,
-      clipBehavior: Clip.antiAlias,
-      shape: _shapeBorderTween(animation).value,
-      color: transitionColor ?? Theme.of(context).cardColor,
-      elevation: Tween<double>(
-        begin: 0.0,
-        end: elevation,
-      )
-          .animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.fastOutSlowIn,
-            reverseCurve: Curves.fastOutSlowIn.flipped,
-          ))
-          .value,
-      child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
+        height: _containerSize(context, animation).height,
+        child: Material(
+          type: MaterialType.card,
+          clipBehavior: Clip.antiAlias,
+          shape: _shapeBorderTween(animation).value,
+          color: transitionColor ?? Theme.of(context).cardColor,
+          elevation: _materialElevation(animation),
           child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
             physics: NeverScrollableScrollPhysics(),
             child: SizedBox(
-              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               child: transitionToChild
-                  ? _renderBoxOffset.dx == 0.0
-                      ? FadeTransition(
-                          opacity: VerticalTransitionOpacityTween(
-                            begin: 0.0,
-                            end: 1.0,
-                          ).animate(CurvedAnimation(
+                  ? FadeTransition(
+                      opacity: VerticalTransitionOpacityTween(
+                        begin: 0.0,
+                        end: 1.0,
+                      ).animate(CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.fastOutSlowIn,
+                      )),
+                      child: VerticalTransitionChildTween(
+                              begin: _verticalTransitionWidget(), end: child)
+                          .animate(CurvedAnimation(
                             parent: animation,
                             curve: Curves.fastOutSlowIn,
-                          )),
-                          child: VerticalTransitionChildTween(
-                            begin: _verticalTransitionWidget(),
-                            end: child,
-                          )
-                              .animate(CurvedAnimation(
-                                parent: animation,
-                                curve: Curves.fastOutSlowIn,
-                              ))
-                              .value,
-                        )
-                      : FadeTransition(
-                          opacity: Tween<double>(
-                            begin: 0.0,
-                            end: 1.0,
-                          ).animate(CurvedAnimation(
-                            parent: animation,
-                            curve: Interval(
-                              0.4,
-                              0.8,
-                              curve: Curves.fastOutSlowIn,
-                            ),
-                            reverseCurve: Interval(
-                              0.4,
-                              0.8,
-                              curve: Curves.fastOutSlowIn.flipped,
-                            ),
-                          )),
-                          child: child,
-                        )
+                          ))
+                          .value,
+                    )
                   : child,
             ),
           ),
@@ -352,6 +352,32 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         color: transitionColor,
       );
     }
+  }
+
+  double _materialElevation(Animation<double> animation) {
+    return Tween<double>(
+      begin: 0.0,
+      end: elevation,
+    )
+        .animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.fastOutSlowIn,
+          reverseCurve: Curves.fastOutSlowIn.flipped,
+        ))
+        .value;
+  }
+
+  Size _containerSize(BuildContext context, Animation<double> animation) {
+    return SizeTween(
+      begin: _renderBoxSize,
+      end: MediaQuery.of(context).size,
+    )
+        .animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.fastOutSlowIn,
+          reverseCurve: Curves.fastOutSlowIn.flipped,
+        ))
+        .value;
   }
 
   Animation<ShapeBorder> _shapeBorderTween(Animation<double> animation) {

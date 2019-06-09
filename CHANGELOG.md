@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+- Bidirectional `MorpheusPageRoute` transitions are now horizontally centered.
+
 ## [0.8.0] - 2019-06-01
 
 ### Added
