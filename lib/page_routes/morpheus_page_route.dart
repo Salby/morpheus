@@ -233,21 +233,24 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                   child: Transform.scale(
                     alignment: Alignment.topLeft,
                     scale: Tween<double>(
-                      begin: _renderBoxSize.width / MediaQuery.of(context).size.width,
-                          end: 1.0,
-                    ).animate(CurvedAnimation(
-                      parent: animation,
-                      curve: Interval(
-                        0.2,
-                        1.0,
-                        curve: Curves.fastOutSlowIn,
-                      ),
-                      reverseCurve: Interval(
-                        0.2,
-                        1.0,
-                        curve: Curves.fastOutSlowIn.flipped,
-                      ),
-                    )).value,
+                      begin: _renderBoxSize.width /
+                          MediaQuery.of(context).size.width,
+                      end: 1.0,
+                    )
+                        .animate(CurvedAnimation(
+                          parent: animation,
+                          curve: Interval(
+                            0.2,
+                            1.0,
+                            curve: Curves.fastOutSlowIn,
+                          ),
+                          reverseCurve: Interval(
+                            0.2,
+                            1.0,
+                            curve: Curves.fastOutSlowIn.flipped,
+                          ),
+                        ))
+                        .value,
                     child: transitionToChild
                         ? FadeTransition(
                             opacity: Tween<double>(
@@ -314,7 +317,9 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                         curve: Curves.fastOutSlowIn,
                       )),
                       child: VerticalTransitionChildTween(
-                              begin: _verticalTransitionWidget(), end: child)
+                        begin: _verticalTransitionWidget(),
+                        end: child,
+                      )
                           .animate(CurvedAnimation(
                             parent: animation,
                             curve: Curves.fastOutSlowIn,
