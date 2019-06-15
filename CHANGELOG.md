@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+- Bidirectional `MorpheusPageRoute` transitions scales its child screen in the animation.
+
 ## [0.8.1] - 2019-06-09
 
 ### Changed

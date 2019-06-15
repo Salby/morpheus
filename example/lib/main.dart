@@ -86,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final fabKey = GlobalKey();
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -165,6 +166,20 @@ class ProfileScreen extends StatelessWidget {
             ]),
           ),
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        key: fabKey,
+        child: Icon(Icons.add),
+        onPressed: () => Navigator.of(context).push(MorpheusPageRoute(
+          builder: (context) => PostScreen(title: 'New post'),
+          parentKey: fabKey,
+          transitionColor: Theme.of(context).accentColor,
+          shapeBorderTween: ShapeBorderTween(
+            begin: CircleBorder(),
+            end: RoundedRectangleBorder(),
+          ),
+        )),
       ),
     );
   }
@@ -368,11 +383,6 @@ class _PostScreenState extends State<PostScreen>
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.favorite_border),
-          onPressed: () => null,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       ),
     );
   }
