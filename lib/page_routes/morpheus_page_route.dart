@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/alignment_from_offset.dart';
 import '../tweens/vertical_transition_child_tween.dart';
 import '../tweens/vertical_transition_opacity_tween.dart';
 
@@ -83,18 +82,6 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
 
   static Size _getSize(GlobalKey parentKey) {
     return _findRenderBox(parentKey).size;
-  }
-
-  Alignment _getAlignment(BuildContext context) {
-    final Size displaySize = MediaQuery.of(context).size;
-    final alignment = AlignmentFromOffset(
-      _renderBoxOffset,
-      Size(
-        displaySize.width - _renderBoxSize.width,
-        displaySize.height - _renderBoxSize.height,
-      ),
-    );
-    return alignment.alignment;
   }
 
   @override
