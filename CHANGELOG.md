@@ -3,7 +3,12 @@
 ## [Unreleased]
 
 ### Changed
+- Changed all `MorpheusPageRoute` transitions so that they now should be more accurate to the Material Design guidelines.
 - Bidirectional `MorpheusPageRoute` transitions scales its child screen in the animation.
+
+### Removed
+- Removed the `shapeBorderTween` parameter from `MorpheusPageRoute`. It has been replaced with a `borderRadius` parameter.
+- Removed the `elevation` parameter from `MorpheusPageRoute`.
 
 ## [0.8.1] - 2019-06-09
 

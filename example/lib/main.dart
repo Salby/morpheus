@@ -52,6 +52,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     FeedScreen(),
+    ListScreen(),
     ProfileScreen(),
   ];
   int _currentIndex = 0;
@@ -71,6 +72,10 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text('Feed'),
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            title: Text('List'),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.account_box),
             title: Text('Profile'),
           ),
@@ -80,6 +85,61 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
     );
+  }
+}
+
+class ListScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 128.0,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.all(18.0),
+              title: Text(
+                'List',
+                style: Theme.of(context).appBarTheme.textTheme.title,
+              ),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Divider(height: 1.0),
+              ListView.separated(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  final parentKey = GlobalKey();
+                  return ListTile(
+                    key: parentKey,
+                    leading: CircleAvatar(child: Text('$index')),
+                    title: Text('Item $index'),
+                    onTap: () => _showPost(context, parentKey, 'Item $index'),
+                  );
+                },
+                separatorBuilder: (context, index) => Divider(
+                      height: 0.0,
+                    ),
+                itemCount: 100,
+              ),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPost(BuildContext context, GlobalKey parentKey, String title) {
+    Navigator.of(context).push(MorpheusPageRoute(
+      builder: (context) => Scaffold(
+            appBar: AppBar(title: Text(title)),
+          ),
+      parentKey: parentKey,
+    ));
   }
 }
 
@@ -172,14 +232,11 @@ class ProfileScreen extends StatelessWidget {
         key: fabKey,
         child: Icon(Icons.add),
         onPressed: () => Navigator.of(context).push(MorpheusPageRoute(
-          builder: (context) => PostScreen(title: 'New post'),
-          parentKey: fabKey,
-          transitionColor: Theme.of(context).accentColor,
-          shapeBorderTween: ShapeBorderTween(
-            begin: CircleBorder(),
-            end: RoundedRectangleBorder(),
-          ),
-        )),
+              builder: (context) => PostScreen(title: 'New post'),
+              parentKey: fabKey,
+              transitionColor: Theme.of(context).accentColor,
+              borderRadius: BorderRadius.circular(28.0),
+            )),
       ),
     );
   }
@@ -187,10 +244,9 @@ class ProfileScreen extends StatelessWidget {
   void _showPost(BuildContext context, GlobalKey parentKey, String title) {
     Navigator.of(context).push(MorpheusPageRoute(
       builder: (context) => PostScreen(
-        title: title,
-      ),
+            title: title,
+          ),
       parentKey: parentKey,
-      scrimColor: Theme.of(context).scaffoldBackgroundColor,
     ));
   }
 }
@@ -256,9 +312,7 @@ class FeedScreen extends StatelessWidget {
             title: title,
           ),
       parentKey: parentKey,
-      transitionDuration: Duration(milliseconds: 300),
       transitionToChild: false,
-      scrimColor: Theme.of(context).scaffoldBackgroundColor,
     ));
   }
 }
@@ -326,7 +380,7 @@ class _PostScreenState extends State<PostScreen>
   void initState() {
     super.initState();
     controller = AnimationController(
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 500),
       vsync: this,
     );
     height = Tween<double>(
@@ -335,7 +389,6 @@ class _PostScreenState extends State<PostScreen>
     ).animate(CurvedAnimation(
       parent: controller,
       curve: Curves.fastOutSlowIn,
-      reverseCurve: Curves.fastOutSlowIn.flipped,
     ))
       ..addListener(() {
         setState(() {});
@@ -388,7 +441,7 @@ class _PostScreenState extends State<PostScreen>
   }
 
   void play() {
-    setState(() => display = true);
+    if (mounted) setState(() => display = true);
     controller.forward();
   }
 
