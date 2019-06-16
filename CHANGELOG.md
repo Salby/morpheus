@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.0.0] - 2019-06-16
 
 ### Changed
 - Changed all `MorpheusPageRoute` transitions so that they now should be more accurate to the Material Design guidelines.
