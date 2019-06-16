@@ -80,7 +80,7 @@ void main() {
     }
 
     Future<Null> _navigateToDetailsScreen(WidgetTester tester) async {
-      /// Tap the button which should navigate to the details page.
+      /// Tap the button which should navigate to the details screen.
       /// By calling tester.pumpAndSettle(), we ensure that all animations
       /// have completed before we continue further.
       await tester.tap(find.byKey(MainScreen.navigateToDetailsButtonKey));
@@ -88,19 +88,19 @@ void main() {
     }
 
     testWidgets(
-        'when tapping "navigate to details" button, should navigate to details page',
+        'when tapping "navigate to details" button, should navigate to details screen',
         (WidgetTester tester) async {
       await _buildMainScreen(tester);
       await _navigateToDetailsScreen(tester);
 
       // By tapping the button, we should've now navigated to the details
-      // page. The didPush() method should've been called...
+      // screen. The didPush() method should've been called...
       verify(mockObserver.didPush(any, any));
 
-      // ...and there should be a DetailsPage present in the widget tree...
+      // ...and there should be a Detailsscreen present in the widget tree...
       expect(find.byType(DetailsScreen), findsOneWidget);
 
-      // ...with the message we sent from main page.
+      // ...with the message we sent from main screen.
       expect(find.text('Hello!'), findsOneWidget);
     });
 
@@ -125,7 +125,7 @@ void main() {
       await tester.pumpAndSettle();
 
       /// popResult should now contain whatever the details page sent when
-      /// calling `Navigator.pop()`. In this case, "I'm a pirate".
+      /// calling `Navigator.pop()`. In this case, "Popped.".
       expect(popResult, 'Popped.');
     });
   });
