@@ -19,7 +19,6 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     @required this.builder,
     @required this.parentKey,
     this.transitionDuration = const Duration(milliseconds: 500),
-    this.elevation = 8.0,
     this.scrimColor = Colors.black45,
     this.borderRadius,
     this.transitionColor,
@@ -28,7 +27,6 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   })  : assert(builder != null),
         assert(parentKey != null),
         assert(transitionDuration != null),
-        assert(elevation != null),
         assert(scrimColor != null),
         _renderBoxOffset = _getOffset(parentKey),
         _renderBoxSize = _getSize(parentKey),
@@ -45,10 +43,6 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// like the element that [parentKey] is attached to turns into a new page
   /// with the contents of [builder].
   final GlobalKey parentKey;
-
-  /// Defines the elevation of the MorpheusPageRoute at the end of the
-  /// transition.
-  final double elevation;
 
   /// Creates an overlay that covers the content outside of the
   /// MorpheusPageRoute.
