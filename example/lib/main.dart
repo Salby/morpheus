@@ -229,6 +229,7 @@ class ProfileScreen extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
+        heroTag: 'add',
         key: fabKey,
         child: Icon(Icons.add),
         onPressed: () => Navigator.of(context).push(MorpheusPageRoute(
@@ -247,6 +248,8 @@ class ProfileScreen extends StatelessWidget {
             title: title,
           ),
       parentKey: parentKey,
+      transitionColor: Colors.grey[300],
+      borderRadius: BorderRadius.circular(8.0),
     ));
   }
 }

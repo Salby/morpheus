@@ -103,15 +103,31 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   }
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    final bool verticalTransition = _renderBoxOffset.dx == 0.0;
+
+    final double scrimStart = verticalTransition ? 0.0 : 0.2;
+
     final Animation<Color> scrimAnimation = ColorTween(
       begin: scrimColor.withOpacity(0.0),
       end: scrimColor,
     ).animate(CurvedAnimation(
       parent: animation,
-      curve: Curves.fastOutSlowIn,
-      reverseCurve: Curves.fastOutSlowIn.flipped,
+      curve: Interval(
+        scrimStart,
+        1.0,
+        curve: Curves.fastOutSlowIn,
+      ),
+      reverseCurve: Interval(
+        scrimStart,
+        1.0,
+        curve: Curves.fastOutSlowIn.flipped,
+      ),
     ));
 
     return Container(
@@ -131,19 +147,25 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final Animation<double> fadeIn = Tween<double>(
+    final bool verticalTransition = _renderBoxOffset.dx == 0.0;
+
+    final double fadeInEnd = verticalTransition
+        ? _verticalTransitionWidget == null ? 0.3 : 0.1
+        : 0.2;
+
+    final Animation<double> fadeInAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: animation,
       curve: Interval(
         0.0,
-        _renderBoxOffset.dx > 0.0 ? 0.2 : 0.1,
+        fadeInEnd,
         curve: Curves.fastOutSlowIn,
       ),
       reverseCurve: Interval(
         0.0,
-        _renderBoxOffset.dx > 0.0 ? 0.2 : 0.1,
+        fadeInEnd,
         curve: Curves.fastOutSlowIn.flipped,
       ),
     ));
@@ -155,12 +177,12 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         final Animation<double> positionCurve = CurvedAnimation(
           parent: animation,
           curve: Interval(
-            _renderBoxOffset.dx > 0.0 ? 0.2 : 0.0,
+            verticalTransition ? 0.0 : 0.2,
             1.0,
             curve: Curves.fastOutSlowIn,
           ),
           reverseCurve: Interval(
-            _renderBoxOffset.dx > 0.0 ? 0.2 : 0.0,
+            verticalTransition ? 0.0 : 0.2,
             1.0,
             curve: Curves.fastOutSlowIn.flipped,
           ),
@@ -184,7 +206,11 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         /// Fades in the child screen from a color.
         final Animation<double> fadeAnimation = CurvedAnimation(
           parent: animation,
-          curve: const Interval(0.2, 1, curve: Curves.ease),
+          curve: Interval(
+            0.2,
+            1,
+            curve: Curves.ease,
+          ),
         );
 
         /// Scales the child screen.
@@ -194,7 +220,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         ).animate(positionCurve);
 
         return FadeTransition(
-          opacity: fadeIn,
+          opacity: fadeInAnimation,
           child: Stack(
             children: <Widget>[
               PositionedTransition(
@@ -211,7 +237,8 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                   ),
                   builder: (context, child) {
                     return ClipRRect(
-                      borderRadius: borderRadiusAnimation.evaluate(positionCurve),
+                      borderRadius:
+                          borderRadiusAnimation.evaluate(positionCurve),
                       clipBehavior: Clip.antiAlias,
                       child: Stack(
                         children: <Widget>[
