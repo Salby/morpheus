@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.0.1] - 2019-06-20
 
 ### Changed
 - `MorpheusPageRoute` transitions scrim transitions has been changed so that it begins when the 'material' starts moving in bidirectional transitions.
