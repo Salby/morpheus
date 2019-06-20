@@ -152,7 +152,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
       builder: (context, constraints) {
         final source = _renderBoxOffset & _renderBoxSize;
 
-        final Animation<double> positionAnimation = CurvedAnimation(
+        final Animation<double> positionCurve = CurvedAnimation(
           parent: animation,
           curve: Interval(
             _renderBoxOffset.dx > 0.0 ? 0.2 : 0.0,
@@ -167,22 +167,22 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         );
 
         /// Animates the child screen position.
-        final Animation<RelativeRect> itemPosition = RelativeRectTween(
+        final Animation<RelativeRect> positionAnimation = RelativeRectTween(
           begin: RelativeRect.fromLTRB(
               source.left,
               source.top,
               constraints.biggest.width - source.right,
               constraints.biggest.height - source.bottom),
           end: RelativeRect.fill,
-        ).animate(positionAnimation);
+        ).animate(positionCurve);
 
-        final BorderRadiusTween borderTween = BorderRadiusTween(
+        final BorderRadiusTween borderRadiusAnimation = BorderRadiusTween(
           begin: borderRadius ?? BorderRadius.circular(0.0),
           end: BorderRadius.circular(0.0),
         );
 
         /// Fades in the child screen from a color.
-        final Animation<double> fadeInChild = CurvedAnimation(
+        final Animation<double> fadeAnimation = CurvedAnimation(
           parent: animation,
           curve: const Interval(0.2, 1, curve: Curves.ease),
         );
@@ -191,16 +191,16 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         final Animation<double> scaleAnimation = Tween<double>(
           begin: _renderBoxSize.width / MediaQuery.of(context).size.width,
           end: 1.0,
-        ).animate(positionAnimation);
+        ).animate(positionCurve);
 
         return FadeTransition(
           opacity: fadeIn,
           child: Stack(
             children: <Widget>[
               PositionedTransition(
-                rect: itemPosition,
+                rect: positionAnimation,
                 child: AnimatedBuilder(
-                  animation: positionAnimation,
+                  animation: positionCurve,
                   child: OverflowBox(
                     alignment: Alignment.topCenter,
                     minWidth: constraints.maxWidth,
@@ -211,7 +211,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                   ),
                   builder: (context, child) {
                     return ClipRRect(
-                      borderRadius: borderTween.evaluate(positionAnimation),
+                      borderRadius: borderRadiusAnimation.evaluate(positionCurve),
                       clipBehavior: Clip.antiAlias,
                       child: Stack(
                         children: <Widget>[
@@ -224,7 +224,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                           transitionToChild
                               ? _renderBoxOffset.dx > 0.0
                                   ? FadeTransition(
-                                      opacity: fadeInChild,
+                                      opacity: fadeAnimation,
                                       child: ScaleTransition(
                                         alignment: Alignment.topCenter,
                                         scale: scaleAnimation,
