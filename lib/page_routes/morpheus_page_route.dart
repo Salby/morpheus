@@ -9,7 +9,7 @@ import '../tweens/vertical_transition_opacity_tween.dart';
 /// as the route is popped from the stack via [Navigator.pop] by providing the
 /// optional `result` argument.
 ///
-/// Thanks to Github user flschweiger for inspiring refactorings :)
+/// Thanks to Github user flschweiger for inspiring refactoring.
 class MorpheusPageRoute<T> extends PageRoute<T> {
   /// Construct a MorpheusPageRoute whose contents are defined by [builder].
   ///
