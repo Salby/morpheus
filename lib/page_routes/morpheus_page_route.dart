@@ -8,8 +8,6 @@ import '../tweens/vertical_transition_opacity_tween.dart';
 /// The type `T` specifies the return type of the route which can be supplied
 /// as the route is popped from the stack via [Navigator.pop] by providing the
 /// optional `result` argument.
-///
-/// Thanks to Github user flschweiger for inspiring refactoring.
 class MorpheusPageRoute<T> extends PageRoute<T> {
   /// Construct a MorpheusPageRoute whose contents are defined by [builder].
   ///
@@ -23,6 +21,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     this.borderRadius,
     this.transitionColor,
     this.transitionToChild = true,
+    this.scaleChild = true,
     RouteSettings settings,
   })  : assert(builder != null),
         assert(parentKey != null),
@@ -58,6 +57,12 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// Defines whether the animation should transition from a temporary widget
   /// into the contents of [builder] or not.
   final bool transitionToChild;
+
+  /// Defines whether the animation should scale in the contents of [builder]
+  /// or not.
+  ///
+  /// This only affects bidirectional transitions.
+  final bool scaleChild;
 
   /// Used to calculate the transition's [Offset]
   Offset _renderBoxOffset;
@@ -254,7 +259,10 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                                       opacity: fadeAnimation,
                                       child: ScaleTransition(
                                         alignment: Alignment.topCenter,
-                                        scale: scaleAnimation,
+                                        scale: scaleChild
+                                            ? scaleAnimation
+                                            : ConstantTween<double>(1.0)
+                                                .animate(positionCurve),
                                         child: child,
                                       ),
                                     )
