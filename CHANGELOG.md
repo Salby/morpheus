@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.0.2] - 2019-06-22
 
 ### Added
 - Added `scaleChild` toggle for disabling the scale animation of a `MorpheusPageRoute` transition.

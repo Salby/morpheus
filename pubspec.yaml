@@ -1,6 +1,6 @@
 name: morpheus
 description: A Flutter package for easily implementing Material Design navigation transitions.
-version: 1.0.1
+version: 1.0.2
 author: Sander Dalby Larsen <srdlarsen@gmail.com>
 homepage: https://github.com/salby/morpheus
 
