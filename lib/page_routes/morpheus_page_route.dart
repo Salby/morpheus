@@ -29,10 +29,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         assert(scrimColor != null),
         _renderBoxOffset = _getOffset(parentKey),
         _renderBoxSize = _getSize(parentKey),
-        _verticalTransitionWidget = _getVerticalTransitionWidget(
-          parentKey,
-          transitionColor,
-        ),
+        _verticalTransitionWidget = _getVerticalTransitionWidget(parentKey),
         super(settings: settings);
 
   /// Builds the contents of the route.
@@ -275,7 +272,8 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                                         curve: Curves.fastOutSlowIn,
                                       )),
                                       child: VerticalTransitionChildTween(
-                                        begin: _verticalTransitionWidget,
+                                        begin: _verticalTransitionWidget ??
+                                            Container(),
                                         end: child,
                                       )
                                           .animate(CurvedAnimation(
@@ -298,10 +296,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     );
   }
 
-  static Widget _getVerticalTransitionWidget(
-    GlobalKey parentKey,
-    Color transitionColor,
-  ) {
+  static Widget _getVerticalTransitionWidget(GlobalKey parentKey) {
     final Widget parentWidget = parentKey.currentWidget;
     if (parentWidget is ListTile) {
       return Material(
@@ -321,9 +316,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         ),
       );
     } else {
-      return Container(
-        color: transitionColor,
-      );
+      return null;
     }
   }
 }
