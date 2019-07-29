@@ -124,7 +124,7 @@ class ListScreen extends StatelessWidget {
                 separatorBuilder: (context, index) => Divider(
                       height: 0.0,
                     ),
-                itemCount: 100,
+                itemCount: 10,
               ),
             ]),
           ),
