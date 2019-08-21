@@ -8,6 +8,11 @@ import '../tweens/vertical_transition_opacity_tween.dart';
 /// The type `T` specifies the return type of the route which can be supplied
 /// as the route is popped from the stack via [Navigator.pop] by providing the
 /// optional `result` argument.
+///
+/// See also:
+///
+/// * [PageRoute] which this class extends.
+/// * [MaterialPageRoute] which is also based on [PageRoute].
 class MorpheusPageRoute<T> extends PageRoute<T> {
   /// Construct a MorpheusPageRoute whose contents are defined by [builder].
   ///
@@ -61,10 +66,10 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// This only affects bidirectional transitions.
   final bool scaleChild;
 
-  /// Used to calculate the transition's [Offset]
+  /// Used to calculate the transition's [Offset].
   Offset _renderBoxOffset;
 
-  /// Used to calculate the transition's [Size]
+  /// Used to calculate the transition's [Size].
   Size _renderBoxSize;
 
   Widget _verticalTransitionWidget;
@@ -296,6 +301,13 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     );
   }
 
+  /// Returns a widget that is a copy of the widget that [parentKey] is
+  /// attached to, but only if the widget is supported. If the widget is not
+  /// supported, this method will return null.
+  ///
+  /// Currently supported widgets include:
+  ///
+  /// * [ListTile]
   static Widget getVerticalTransitionWidget(GlobalKey parentKey) {
     final Widget parentWidget = parentKey.currentWidget;
     if (parentWidget is ListTile) {
