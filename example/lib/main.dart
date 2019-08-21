@@ -7,24 +7,34 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.light();
     return MaterialApp(
+      theme: ThemeData(
+        colorScheme: colorScheme,
+        primaryColor: colorScheme.primary,
+        accentColor: colorScheme.secondary,
+        scaffoldBackgroundColor: colorScheme.background,
+      ),
       title: 'Morpheus example app',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/profile':
             return MorpheusPageRoute(
               builder: (_) => ProfileScreen(),
+              settings: settings,
             );
             break;
           case '/settings':
             return MorpheusPageRoute(
               builder: (_) => SettingsScreen(),
+              settings: settings,
             );
             break;
           case '/':
           default:
             return MaterialPageRoute(
               builder: (_) => HomeScreen(),
+              settings: settings,
             );
             break;
         }
@@ -55,6 +65,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
+          Divider(height: 1.0),
           ListTile(
             key: settingsKey,
             title: Text('Settings'),
@@ -65,6 +76,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
+          Divider(height: 1.0),
         ],
       ),
     );
