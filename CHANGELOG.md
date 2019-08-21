@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Improved documentation for `MorpheusPageRoute`.
+
 ## [1.0.2] - 2019-06-22
 
 ### Added
