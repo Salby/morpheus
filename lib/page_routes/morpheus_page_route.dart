@@ -29,7 +29,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         assert(scrimColor != null),
         _renderBoxOffset = _getOffset(parentKey),
         _renderBoxSize = _getSize(parentKey),
-        _verticalTransitionWidget = _getVerticalTransitionWidget(parentKey),
+        _verticalTransitionWidget = getVerticalTransitionWidget(parentKey),
         super(settings: settings);
 
   /// Builds the contents of the route.
@@ -296,7 +296,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     );
   }
 
-  static Widget _getVerticalTransitionWidget(GlobalKey parentKey) {
+  static Widget getVerticalTransitionWidget(GlobalKey parentKey) {
     final Widget parentWidget = parentKey.currentWidget;
     if (parentWidget is ListTile) {
       return Material(
