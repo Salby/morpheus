@@ -1,9 +1,13 @@
 # Changelog
 
-## [Unreleased]
+## [1.1.0] - 2019-08-21
 
 ### Added
 - Improved documentation for `MorpheusPageRoute`.
+- Added the `MorpheusRouteArguments` class that can be passed as the arguments when pushing a named route.
+
+### Changed
+- Changed the example to use named routes.
 
 ## [1.0.2] - 2019-06-22
 
