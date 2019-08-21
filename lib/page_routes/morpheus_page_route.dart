@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../tweens/vertical_transition_child_tween.dart';
-import '../tweens/vertical_transition_opacity_tween.dart';
+
+import 'package:morpheus/page_routes/morpheus_route_arguments.dart';
+import 'package:morpheus/tweens/vertical_transition_child_tween.dart';
+import 'package:morpheus/tweens/vertical_transition_opacity_tween.dart';
 
 /// PageRoute that implements a parent-child transition as defined in the
 /// Material Design guidelines.
@@ -20,7 +22,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// and [scrimColor] must not be null.
   MorpheusPageRoute({
     @required this.builder,
-    @required this.parentKey,
+    this.parentKey,
     this.transitionDuration = const Duration(milliseconds: 500),
     this.scrimColor = Colors.black45,
     this.borderRadius,
@@ -29,13 +31,12 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     this.scaleChild = true,
     RouteSettings settings,
   })  : assert(builder != null),
-        assert(parentKey != null),
         assert(transitionDuration != null),
-        assert(scrimColor != null),
-        _renderBoxOffset = _getOffset(parentKey),
-        _renderBoxSize = _getSize(parentKey),
-        _verticalTransitionWidget = getVerticalTransitionWidget(parentKey),
-        super(settings: settings);
+        super(settings: settings) {
+    _getRenderBoxOffset();
+    _getRenderBoxSize();
+    getTransitionWidget();
+  }
 
   /// Builds the contents of the route.
   final WidgetBuilder builder;
@@ -46,7 +47,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   final GlobalKey parentKey;
 
   /// Creates an overlay that covers the content outside of the
-  /// MorpheusPageRoute.
+  /// [MorpheusPageRoute].
   final Color scrimColor;
 
   /// Defines the initial border-radius of the transition.
@@ -72,17 +73,22 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// Used to calculate the transition's [Size].
   Size _renderBoxSize;
 
-  Widget _verticalTransitionWidget;
+  Widget _transitionWidget;
 
-  static RenderBox _findRenderBox(GlobalKey parentKey) =>
-      parentKey.currentContext.findRenderObject();
-
-  static Offset _getOffset(GlobalKey parentKey) {
-    return _findRenderBox(parentKey).localToGlobal(Offset.zero);
+  RenderBox _renderBox() {
+    final arguments = settings.arguments as MorpheusRouteArguments;
+    final key = parentKey ?? arguments.parentKey;
+    return key.currentContext.findRenderObject();
   }
 
-  static Size _getSize(GlobalKey parentKey) {
-    return _findRenderBox(parentKey).size;
+  void _getRenderBoxOffset() {
+    final renderBox = _renderBox();
+    _renderBoxOffset = renderBox.localToGlobal(Offset.zero);
+  }
+
+  void _getRenderBoxSize() {
+    final renderBox = _renderBox();
+    _renderBoxSize = renderBox.size;
   }
 
   @override
@@ -156,9 +162,8 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   ) {
     final bool verticalTransition = _renderBoxOffset.dx == 0.0;
 
-    final double fadeInEnd = verticalTransition
-        ? _verticalTransitionWidget == null ? 0.3 : 0.1
-        : 0.2;
+    final double fadeInEnd =
+        verticalTransition ? _transitionWidget == null ? 0.3 : 0.1 : 0.2;
 
     final Animation<double> fadeInAnimation = Tween<double>(
       begin: 0.0,
@@ -277,8 +282,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
                                         curve: Curves.fastOutSlowIn,
                                       )),
                                       child: VerticalTransitionChildTween(
-                                        begin: _verticalTransitionWidget ??
-                                            Container(),
+                                        begin: _transitionWidget ?? Container(),
                                         end: child,
                                       )
                                           .animate(CurvedAnimation(
@@ -301,17 +305,20 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     );
   }
 
-  /// Returns a widget that is a copy of the widget that [parentKey] is
-  /// attached to, but only if the widget is supported. If the widget is not
-  /// supported, this method will return null.
+  /// Sets [_transitionWidget] to a widget that is a copy of the widget
+  /// that [parentKey] is attached to, but only if the widget is supported.
+  /// If the widget is not supported, this method will set
+  /// [_transitionWidget] to null.
   ///
   /// Currently supported widgets include:
   ///
   /// * [ListTile]
-  static Widget getVerticalTransitionWidget(GlobalKey parentKey) {
-    final Widget parentWidget = parentKey.currentWidget;
+  void getTransitionWidget() {
+    final arguments = settings.arguments as MorpheusRouteArguments;
+    final key = parentKey ?? arguments.parentKey;
+    final Widget parentWidget = key.currentWidget;
     if (parentWidget is ListTile) {
-      return Material(
+      _transitionWidget = Material(
         type: MaterialType.transparency,
         child: ListTile(
           onTap: () => null,
@@ -328,7 +335,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
         ),
       );
     } else {
-      return null;
+      _transitionWidget = null;
     }
   }
 }
