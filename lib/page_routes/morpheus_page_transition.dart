@@ -238,17 +238,11 @@ class MorpheusPageTransition extends StatelessWidget {
     final Animation<double> scaleParentAnimation = Tween<double>(
       begin: 1.0,
       end: MediaQuery.of(transitionContext).size.width / renderBoxSize.width,
-    ).animate(CurvedAnimation(
-      parent: animation,
-      curve: Curves.fastOutSlowIn,
-    ));
+    ).animate(positionAnimationCurve);
     final Animation<double> scaleChildAnimation = Tween<double>(
       begin: renderBoxSize.width / MediaQuery.of(transitionContext).size.width,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: animation,
-      curve: Curves.fastOutSlowIn,
-    ));
+    ).animate(positionAnimationCurve);
     final parentWidget = transitionWidget != null
         ? ScaleTransition(
             alignment: Alignment.center,
@@ -274,10 +268,7 @@ class MorpheusPageTransition extends StatelessWidget {
           child: childScreen,
         ),
       )
-          .animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.fastOutSlowIn,
-          ))
+          .animate(positionAnimationCurve)
           .value,
     );
   }
