@@ -6,6 +6,9 @@
 - Added a new 'default' transition for situations where no `parentKey` has been provided (This wasn't possible before).
 - Added support for transitioning from `Container` and `FloatingActionButton` widgets.
 
+### Changed
+- Changed the default `MorpheusPageRoute` transition duration from 500ms to 450ms.
+
 ## [1.1.0] - 2019-08-21
 
 ### Added
