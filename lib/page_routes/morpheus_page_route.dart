@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:morpheus/page_routes/morpheus_route_arguments.dart';
-import 'package:morpheus/tweens/vertical_transition_child_tween.dart';
-import 'package:morpheus/tweens/vertical_transition_opacity_tween.dart';
+import 'package:morpheus/page_routes/morpheus_page_transition.dart';
 
 /// PageRoute that implements a parent-child transition as defined in the
 /// Material Design guidelines.
@@ -22,8 +21,8 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// and [scrimColor] must not be null.
   MorpheusPageRoute({
     @required this.builder,
-    this.parentKey,
     this.transitionDuration = const Duration(milliseconds: 500),
+    this.parentKey,
     this.scrimColor = Colors.black45,
     this.borderRadius,
     this.transitionColor,
@@ -32,11 +31,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     RouteSettings settings,
   })  : assert(builder != null),
         assert(transitionDuration != null),
-        super(settings: settings) {
-    _getRenderBoxOffset();
-    _getRenderBoxSize();
-    getTransitionWidget();
-  }
+        super(settings: settings);
 
   /// Builds the contents of the route.
   final WidgetBuilder builder;
@@ -46,8 +41,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// with the contents of [builder].
   final GlobalKey parentKey;
 
-  /// Creates an overlay that covers the content outside of the
-  /// [MorpheusPageRoute].
+  /// The color of the overlay that covers the content behind the transition.
   final Color scrimColor;
 
   /// Defines the initial border-radius of the transition.
@@ -67,28 +61,10 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// This only affects bidirectional transitions.
   final bool scaleChild;
 
-  /// Used to calculate the transition's [Offset].
-  Offset _renderBoxOffset;
-
-  /// Used to calculate the transition's [Size].
-  Size _renderBoxSize;
-
-  Widget _transitionWidget;
-
   RenderBox _renderBox() {
     final arguments = settings.arguments as MorpheusRouteArguments;
     final key = parentKey ?? arguments.parentKey;
     return key.currentContext.findRenderObject();
-  }
-
-  void _getRenderBoxOffset() {
-    final renderBox = _renderBox();
-    _renderBoxOffset = renderBox.localToGlobal(Offset.zero);
-  }
-
-  void _getRenderBoxSize() {
-    final renderBox = _renderBox();
-    _renderBoxSize = renderBox.size;
   }
 
   @override
@@ -110,8 +86,11 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   final bool maintainState = true;
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     return Builder(builder: builder);
   }
 
@@ -122,220 +101,26 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final bool verticalTransition = _renderBoxOffset.dx == 0.0;
+    final routeSettings = settings.arguments as MorpheusRouteArguments;
 
-    final double scrimStart = verticalTransition ? 0.0 : 0.2;
-
-    final Animation<Color> scrimAnimation = ColorTween(
-      begin: scrimColor.withOpacity(0.0),
-      end: scrimColor,
-    ).animate(CurvedAnimation(
-      parent: animation,
-      curve: Interval(
-        scrimStart,
-        1.0,
-        curve: Curves.fastOutSlowIn,
-      ),
-      reverseCurve: Interval(
-        scrimStart,
-        1.0,
-        curve: Curves.fastOutSlowIn.flipped,
-      ),
-    ));
-
-    return Container(
-      color: scrimAnimation.value,
-      child: _transitionsBuilder(
-        context,
-        animation,
-        secondaryAnimation,
-        child,
-      ),
+    // Define transition settings.
+    final transitionSettings = MorpheusRouteArguments(
+      parentKey: routeSettings?.parentKey ?? parentKey,
+      scrimColor: routeSettings?.scrimColor ?? scrimColor,
+      borderRadius: routeSettings?.borderRadius ?? borderRadius,
+      transitionColor: routeSettings?.transitionColor ?? transitionColor,
+      transitionToChild: routeSettings?.transitionToChild ?? transitionToChild,
+      scaleChild: routeSettings?.scaleChild ?? scaleChild,
     );
-  }
 
-  Widget _transitionsBuilder(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
-    final bool verticalTransition = _renderBoxOffset.dx == 0.0;
-
-    final double fadeInEnd =
-        verticalTransition ? _transitionWidget == null ? 0.3 : 0.1 : 0.2;
-
-    final Animation<double> fadeInAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: animation,
-      curve: Interval(
-        0.0,
-        fadeInEnd,
-        curve: Curves.fastOutSlowIn,
-      ),
-      reverseCurve: Interval(
-        0.0,
-        fadeInEnd,
-        curve: Curves.fastOutSlowIn.flipped,
-      ),
-    ));
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final source = _renderBoxOffset & _renderBoxSize;
-
-        final Animation<double> positionCurve = CurvedAnimation(
-          parent: animation,
-          curve: Interval(
-            verticalTransition ? 0.0 : 0.2,
-            1.0,
-            curve: Curves.fastOutSlowIn,
-          ),
-          reverseCurve: Interval(
-            verticalTransition ? 0.0 : 0.2,
-            1.0,
-            curve: Curves.fastOutSlowIn.flipped,
-          ),
-        );
-
-        /// Animates the child screen position.
-        final Animation<RelativeRect> positionAnimation = RelativeRectTween(
-          begin: RelativeRect.fromLTRB(
-              source.left,
-              source.top,
-              constraints.biggest.width - source.right,
-              constraints.biggest.height - source.bottom),
-          end: RelativeRect.fill,
-        ).animate(positionCurve);
-
-        final BorderRadiusTween borderRadiusAnimation = BorderRadiusTween(
-          begin: borderRadius ?? BorderRadius.circular(0.0),
-          end: BorderRadius.circular(0.0),
-        );
-
-        /// Fades in the child screen from a color.
-        final Animation<double> fadeAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Interval(
-            0.2,
-            1,
-            curve: Curves.ease,
-          ),
-        );
-
-        /// Scales the child screen.
-        final Animation<double> scaleAnimation = Tween<double>(
-          begin: _renderBoxSize.width / MediaQuery.of(context).size.width,
-          end: 1.0,
-        ).animate(positionCurve);
-
-        return FadeTransition(
-          opacity: fadeInAnimation,
-          child: Stack(
-            children: <Widget>[
-              PositionedTransition(
-                rect: positionAnimation,
-                child: AnimatedBuilder(
-                  animation: positionCurve,
-                  child: OverflowBox(
-                    alignment: Alignment.topCenter,
-                    minWidth: constraints.maxWidth,
-                    maxWidth: constraints.maxWidth,
-                    minHeight: constraints.maxHeight,
-                    maxHeight: constraints.maxHeight,
-                    child: child,
-                  ),
-                  builder: (context, child) {
-                    return ClipRRect(
-                      borderRadius:
-                          borderRadiusAnimation.evaluate(positionCurve),
-                      clipBehavior: Clip.antiAlias,
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            color:
-                                transitionColor ?? Theme.of(context).cardColor,
-                          ),
-                          transitionToChild
-                              ? _renderBoxOffset.dx > 0.0
-                                  ? FadeTransition(
-                                      opacity: fadeAnimation,
-                                      child: ScaleTransition(
-                                        alignment: Alignment.topCenter,
-                                        scale: scaleChild
-                                            ? scaleAnimation
-                                            : ConstantTween<double>(1.0)
-                                                .animate(positionCurve),
-                                        child: child,
-                                      ),
-                                    )
-                                  : FadeTransition(
-                                      opacity: VerticalTransitionOpacityTween(
-                                        begin: 0.0,
-                                        end: 1.0,
-                                      ).animate(CurvedAnimation(
-                                        parent: animation,
-                                        curve: Curves.fastOutSlowIn,
-                                      )),
-                                      child: VerticalTransitionChildTween(
-                                        begin: _transitionWidget ?? Container(),
-                                        end: child,
-                                      )
-                                          .animate(CurvedAnimation(
-                                            parent: animation,
-                                            curve: Curves.fastOutSlowIn,
-                                          ))
-                                          .value,
-                                    )
-                              : child,
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+    // Return page transition.
+    return MorpheusPageTransition(
+      renderBox: _renderBox(),
+      context: context,
+      animation: animation,
+      secondaryAnimation: secondaryAnimation,
+      child: child,
+      settings: transitionSettings,
     );
-  }
-
-  /// Sets [_transitionWidget] to a widget that is a copy of the widget
-  /// that [parentKey] is attached to, but only if the widget is supported.
-  /// If the widget is not supported, this method will set
-  /// [_transitionWidget] to null.
-  ///
-  /// Currently supported widgets include:
-  ///
-  /// * [ListTile]
-  void getTransitionWidget() {
-    final arguments = settings.arguments as MorpheusRouteArguments;
-    final key = parentKey ?? arguments.parentKey;
-    final Widget parentWidget = key.currentWidget;
-    if (parentWidget is ListTile) {
-      _transitionWidget = Material(
-        type: MaterialType.transparency,
-        child: ListTile(
-          onTap: () => null,
-          trailing: parentWidget.trailing,
-          title: parentWidget.title,
-          contentPadding: parentWidget.contentPadding,
-          isThreeLine: parentWidget.isThreeLine,
-          subtitle: parentWidget.subtitle,
-          leading: parentWidget.leading,
-          dense: parentWidget.dense,
-          enabled: parentWidget.enabled,
-          onLongPress: () => null,
-          selected: parentWidget.selected,
-        ),
-      );
-    } else {
-      _transitionWidget = null;
-    }
   }
 }

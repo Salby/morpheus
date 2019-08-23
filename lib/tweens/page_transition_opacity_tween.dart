@@ -1,8 +1,8 @@
 import 'dart:ui' show lerpDouble;
 import 'package:flutter/material.dart';
 
-class VerticalTransitionOpacityTween extends Tween<double> {
-  VerticalTransitionOpacityTween({
+class PageTransitionOpacityTween extends Tween<double> {
+  PageTransitionOpacityTween({
     double begin,
     double end,
   }) : super(

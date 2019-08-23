@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class VerticalTransitionChildTween extends Tween<Widget> {
-  VerticalTransitionChildTween({
+class PageTransitionChildTween extends Tween<Widget> {
+  PageTransitionChildTween({
     Widget begin,
     Widget end,
   }) : super(
