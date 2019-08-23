@@ -30,9 +30,15 @@ class MyApp extends StatelessWidget {
               settings: settings,
             );
             break;
+          case '/create':
+            return MorpheusPageRoute(
+              builder: (_) => CreateScreen(),
+              settings: settings,
+            );
+            break;
           case '/':
           default:
-            return MaterialPageRoute(
+            return MorpheusPageRoute(
               builder: (_) => HomeScreen(),
               settings: settings,
             );
@@ -46,6 +52,7 @@ class MyApp extends StatelessWidget {
 class HomeScreen extends StatelessWidget {
   final profileKey = GlobalKey();
   final settingsKey = GlobalKey();
+  final createKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +86,19 @@ class HomeScreen extends StatelessWidget {
           Divider(height: 1.0),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
+        key: createKey,
+        child: Icon(Icons.add),
+        onPressed: () => Navigator.of(context).pushNamed(
+          '/create',
+          arguments: MorpheusRouteArguments(
+            parentKey: createKey,
+            transitionColor: Theme.of(context).accentColor,
+            borderRadius: BorderRadius.circular(56.0),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -100,6 +120,22 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
+      ),
+    );
+  }
+}
+
+class CreateScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            title: Text('Create'),
+            expandedHeight: 224.0,
+          ),
+        ],
       ),
     );
   }
