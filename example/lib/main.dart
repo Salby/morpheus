@@ -30,9 +30,15 @@ class MyApp extends StatelessWidget {
               settings: settings,
             );
             break;
+          case '/create':
+            return MorpheusPageRoute(
+              builder: (_) => CreateScreen(),
+              settings: settings,
+            );
+            break;
           case '/':
           default:
-            return MaterialPageRoute(
+            return MorpheusPageRoute(
               builder: (_) => HomeScreen(),
               settings: settings,
             );
@@ -46,6 +52,7 @@ class MyApp extends StatelessWidget {
 class HomeScreen extends StatelessWidget {
   final profileKey = GlobalKey();
   final settingsKey = GlobalKey();
+  final createKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +86,34 @@ class HomeScreen extends StatelessWidget {
           Divider(height: 1.0),
         ],
       ),
+      floatingActionButton: Container(
+        key: createKey,
+        width: MediaQuery.of(context).size.width / 3,
+        height: MediaQuery.of(context).size.width / 3,
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          margin: EdgeInsets.zero,
+          child: InkWell(
+            onTap: () => Navigator.of(context).pushNamed(
+              '/create',
+              arguments: MorpheusRouteArguments(
+                parentKey: createKey,
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(height: 56.0, color: Theme.of(context).primaryColor),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text('Create +'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -100,6 +135,22 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
+      ),
+    );
+  }
+}
+
+class CreateScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            title: Text('Create'),
+            expandedHeight: 224.0,
+          ),
+        ],
       ),
     );
   }

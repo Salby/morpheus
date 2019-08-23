@@ -7,14 +7,13 @@ import 'package:morpheus/tweens/page_transition_opacity_tween.dart';
 /// Builds a parent-child material design navigation transition.
 class MorpheusPageTransition extends StatelessWidget {
   MorpheusPageTransition({
-    @required this.renderBox,
+    this.renderBox,
     @required BuildContext context,
     @required this.animation,
     @required this.secondaryAnimation,
     @required this.child,
     @required this.settings,
-  })  : assert(renderBox != null),
-        assert(context != null),
+  })  : assert(context != null),
         assert(animation != null),
         assert(secondaryAnimation != null),
         assert(child != null),
@@ -45,55 +44,13 @@ class MorpheusPageTransition extends StatelessWidget {
 
   /// Returns true if the parent widget spans the entire width of the screen.
   ///
-  /// returns null if [renderBox] is null.
+  /// returns false if [renderBox] is null.
   bool get useVerticalTransition {
     // Return null if [renderBox] is null.
-    if (renderBox == null) return null;
+    if (renderBox == null) return false;
 
     final screenWidth = MediaQuery.of(transitionContext).size.width;
     return renderBoxSize.width == screenWidth && renderBoxOffset.dx == 0.0;
-  }
-
-  /// Returns a [Widget] that is an exact copy of the widget which
-  /// [settings.parentKey] is attached to, if that widget is of a supported
-  /// type. If the widget is not a supported type this getter will return null.
-  ///
-  /// If the widget type has gesture listeners, these will be disabled in the
-  /// [Widget] that is returned.
-  ///
-  /// Currently supported widgets include:
-  ///
-  /// * [ListTile]
-  Widget get transitionWidget {
-    final parentWidget = settings.parentKey?.currentWidget;
-
-    /// Return null if [settings.parentKey] is null.
-    if (parentWidget == null) return null;
-
-    switch (parentWidget.runtimeType) {
-      case ListTile:
-        final widget = parentWidget as ListTile;
-        return Material(
-          type: MaterialType.transparency,
-          child: ListTile(
-            onTap: () => null,
-            trailing: widget.trailing,
-            title: widget.title,
-            contentPadding: widget.contentPadding,
-            isThreeLine: widget.isThreeLine,
-            subtitle: widget.subtitle,
-            leading: widget.leading,
-            dense: widget.dense,
-            enabled: widget.enabled,
-            onLongPress: () => null,
-            selected: widget.selected,
-          ),
-        );
-        break;
-      default:
-        return null;
-        break;
-    }
   }
 
   /// Returns an [Animation] used to animate the transition from the parent widget
@@ -195,7 +152,7 @@ class MorpheusPageTransition extends StatelessWidget {
       ),
     ));
 
-    if (useVerticalTransition == null) {
+    if (renderBox == null) {
       return buildDefaultTransition();
     }
 
@@ -296,7 +253,7 @@ class MorpheusPageTransition extends StatelessWidget {
     return FadeTransition(
       opacity: PageTransitionOpacityTween(
         begin: 0.0,
-        end: 0.0,
+        end: 1.0,
       ).animate(CurvedAnimation(
         parent: animation,
         curve: Curves.fastOutSlowIn,
@@ -321,17 +278,88 @@ class MorpheusPageTransition extends StatelessWidget {
 
   /// TODO: Document method.
   Widget buildDefaultTransition() {
-    final Animation<double> scaleChildAnimation = Tween<double>(
-      begin: 0.9,
-      end: 1.0,
+
+    // Define the scrim animation.
+    final Animation<Color> scrimAnimation = ColorTween(
+      begin: settings.scrimColor.withOpacity(0.0),
+      end: settings.scrimColor,
     ).animate(CurvedAnimation(
       parent: animation,
       curve: Curves.fastOutSlowIn,
-      reverseCurve: Curves.fastOutSlowIn.flipped,
     ));
-    return ScaleTransition(
-      scale: scaleChildAnimation,
-      child: child,
+
+    final Animation<double> scaleChildAnimation = Tween<double>(
+      begin: 0.9,
+      end: 1.0,
+    ).animate(positionAnimationCurve);
+
+    return Container(
+      color: scrimAnimation.value,
+      child: FadeTransition(
+        opacity: positionAnimationCurve,
+        child: ScaleTransition(
+          scale: scaleChildAnimation,
+          child: child,
+        ),
+      ),
     );
+  }
+
+  /// Returns a [Widget] that is an exact copy of the widget which
+  /// [settings.parentKey] is attached to, if that widget is of a supported
+  /// type. If the widget is not a supported type this getter will return null.
+  ///
+  /// If the widget type has gesture listeners, these will be disabled in the
+  /// [Widget] that is returned.
+  ///
+  /// Currently supported widgets include:
+  ///
+  /// * [Container]
+  /// * [ListTile]
+  Widget get transitionWidget {
+    final parentWidget = settings.parentKey?.currentWidget;
+
+    /// Return null if [settings.parentKey] is null.
+    if (parentWidget == null) return null;
+
+    switch (parentWidget.runtimeType) {
+      case ListTile:
+        final widget = parentWidget as ListTile;
+        return Material(
+          type: MaterialType.transparency,
+          child: ListTile(
+            onTap: () => null,
+            trailing: widget.trailing,
+            title: widget.title,
+            contentPadding: widget.contentPadding,
+            isThreeLine: widget.isThreeLine,
+            subtitle: widget.subtitle,
+            leading: widget.leading,
+            dense: widget.dense,
+            enabled: widget.enabled,
+            onLongPress: () => null,
+            selected: widget.selected,
+          ),
+        );
+        break;
+      case Container:
+        final widget = parentWidget as Container;
+        return Container(
+          alignment: widget.alignment,
+          padding: widget.padding,
+          decoration: widget.decoration,
+          foregroundDecoration: widget.foregroundDecoration,
+          width: renderBoxSize.width,
+          height: renderBoxSize.height,
+          constraints: widget.constraints,
+          margin: widget.margin,
+          transform: widget.transform,
+          child: widget.child,
+        );
+        break;
+      default:
+        return null;
+        break;
+    }
   }
 }

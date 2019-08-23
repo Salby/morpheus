@@ -63,7 +63,11 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
 
   RenderBox _renderBox() {
     final arguments = settings.arguments as MorpheusRouteArguments;
-    final key = parentKey ?? arguments.parentKey;
+    final key = parentKey ?? arguments?.parentKey;
+
+    // Return null if [key] is null.
+    if (key == null) return null;
+
     return key.currentContext.findRenderObject();
   }
 
