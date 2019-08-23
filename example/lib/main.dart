@@ -86,31 +86,16 @@ class HomeScreen extends StatelessWidget {
           Divider(height: 1.0),
         ],
       ),
-      floatingActionButton: Container(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton(
         key: createKey,
-        width: MediaQuery.of(context).size.width / 3,
-        height: MediaQuery.of(context).size.width / 3,
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          margin: EdgeInsets.zero,
-          child: InkWell(
-            onTap: () => Navigator.of(context).pushNamed(
-              '/create',
-              arguments: MorpheusRouteArguments(
-                parentKey: createKey,
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(height: 56.0, color: Theme.of(context).primaryColor),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text('Create +'),
-                ),
-              ],
-            ),
+        child: Icon(Icons.add),
+        onPressed: () => Navigator.of(context).pushNamed(
+          '/create',
+          arguments: MorpheusRouteArguments(
+            parentKey: createKey,
+            transitionColor: Theme.of(context).accentColor,
+            borderRadius: BorderRadius.circular(56.0),
           ),
         ),
       ),

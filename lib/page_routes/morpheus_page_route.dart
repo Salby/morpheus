@@ -21,7 +21,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// and [scrimColor] must not be null.
   MorpheusPageRoute({
     @required this.builder,
-    this.transitionDuration = const Duration(milliseconds: 500),
+    this.transitionDuration = const Duration(milliseconds: 450),
     this.parentKey,
     this.scrimColor = Colors.black45,
     this.borderRadius,

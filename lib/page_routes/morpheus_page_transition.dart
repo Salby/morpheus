@@ -238,14 +238,20 @@ class MorpheusPageTransition extends StatelessWidget {
     final Animation<double> scaleParentAnimation = Tween<double>(
       begin: 1.0,
       end: MediaQuery.of(transitionContext).size.width / renderBoxSize.width,
-    ).animate(positionAnimationCurve);
+    ).animate(CurvedAnimation(
+      parent: animation,
+      curve: Curves.fastOutSlowIn,
+    ));
     final Animation<double> scaleChildAnimation = Tween<double>(
       begin: renderBoxSize.width / MediaQuery.of(transitionContext).size.width,
       end: 1.0,
-    ).animate(positionAnimationCurve);
+    ).animate(CurvedAnimation(
+      parent: animation,
+      curve: Curves.fastOutSlowIn,
+    ));
     final parentWidget = transitionWidget != null
         ? ScaleTransition(
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
             scale: scaleParentAnimation,
             child: transitionWidget,
           )
@@ -278,7 +284,6 @@ class MorpheusPageTransition extends StatelessWidget {
 
   /// TODO: Document method.
   Widget buildDefaultTransition() {
-
     // Define the scrim animation.
     final Animation<Color> scrimAnimation = ColorTween(
       begin: settings.scrimColor.withOpacity(0.0),
@@ -316,6 +321,7 @@ class MorpheusPageTransition extends StatelessWidget {
   ///
   /// * [Container]
   /// * [ListTile]
+  /// * [FloatingActionButton] (Not extended)
   Widget get transitionWidget {
     final parentWidget = settings.parentKey?.currentWidget;
 
@@ -355,6 +361,24 @@ class MorpheusPageTransition extends StatelessWidget {
           margin: widget.margin,
           transform: widget.transform,
           child: widget.child,
+        );
+        break;
+      case FloatingActionButton:
+        final widget = parentWidget as FloatingActionButton;
+        if (widget.isExtended) return null;
+        final backgroundColor = widget.backgroundColor ??
+            Theme.of(transitionContext)
+                .floatingActionButtonTheme
+                .backgroundColor ??
+            Theme.of(transitionContext).accentColor;
+        return Material(
+          color: backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(56.0),
+          ),
+          child: Center(
+            child: widget.child,
+          ),
         );
         break;
       default:
