@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Added a new 'default' transition for situations where no `parentKey` has been provided (This wasn't possible before).
+- Added support for transitioning from `Container` and `FloatingActionButton` widgets.
+
 ## [1.1.0] - 2019-08-21
 
 ### Added
