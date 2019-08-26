@@ -61,13 +61,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// This only affects bidirectional transitions.
   final bool scaleChild;
 
-  /// Returns a [RenderBox] from a [GlobalKey] if one is provided, either
-  /// through the [parentKey] parameter or [settings.arguments].
-  ///
-  /// If no [GlobalKey] is provided, this method returns null.
-  RenderBox _getRenderBox() {
-    // Return the stored [RenderBox] if it exists.
-    if (_renderBox != null) return _renderBox;
+  RenderBox _findRenderBox() {
 
     final arguments = settings.arguments as MorpheusRouteArguments;
     final key = parentKey ?? arguments?.parentKey;
@@ -75,13 +69,21 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     // Return null if [key] is null.
     if (key == null) return null;
 
-    // Get the [RenderBox].
+    // Find the [RenderBox] attached to [key].
     final renderBox = key.currentContext.findRenderObject();
 
-    // Store the [RenderBox] for later.
-    _renderBox = renderBox;
+    // If [renderBox] is null but [_renderBox] isn't, return [_renderBox].
+    if (renderBox == null) {
+      if (_renderBox != null) {
+        return _renderBox;
+      } else {
+        return null;
+      }
+    } else {
+      _renderBox = renderBox;
+      return renderBox;
+    }
 
-    return renderBox;
   }
 
   RenderBox _renderBox;
@@ -106,20 +108,20 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
 
   @override
   Widget buildPage(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) {
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      ) {
     return Builder(builder: builder);
   }
 
   @override
   Widget buildTransitions(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child,
+      ) {
     final routeSettings = settings.arguments as MorpheusRouteArguments;
 
     // Define transition settings.
@@ -134,8 +136,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
 
     // Return page transition.
     return MorpheusPageTransition(
-      size: _getRenderBox().size,
-      offset: _getRenderBox().localToGlobal(Offset.zero),
+      renderBox: _findRenderBox(),
       context: context,
       animation: animation,
       secondaryAnimation: secondaryAnimation,

@@ -30,6 +30,12 @@ class MyApp extends StatelessWidget {
               settings: settings,
             );
             break;
+          case '/settings/cookies':
+            return MorpheusPageRoute(
+              builder: (_) => CookiesScreen(),
+              settings: settings,
+            );
+            break;
           case '/create':
             return MorpheusPageRoute(
               builder: (_) => CreateScreen(),
@@ -115,11 +121,28 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class SettingsScreen extends StatelessWidget {
+  final cookiesKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
+      ),
+      body: ListView(
+        children: <Widget>[
+          ListTile(
+            key: cookiesKey,
+            title: Text('Cookies'),
+            onTap: () => Navigator.of(context).pushNamed(
+              '/settings/cookies',
+              arguments: MorpheusRouteArguments(
+                parentKey: cookiesKey,
+              ),
+            ),
+          ),
+          Divider(height: 1.0),
+        ],
       ),
     );
   }
@@ -133,6 +156,22 @@ class CreateScreen extends StatelessWidget {
         slivers: <Widget>[
           SliverAppBar(
             title: Text('Create'),
+            expandedHeight: 224.0,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CookiesScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            title: Text('Cookies'),
             expandedHeight: 224.0,
           ),
         ],

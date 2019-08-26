@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0+3] - 2019-08-26
+
+### Changed
+- Reverted some earlier "fixes".
+
 ## [1.2.0+2] - 2019-08-26
 
 ### Fixes
