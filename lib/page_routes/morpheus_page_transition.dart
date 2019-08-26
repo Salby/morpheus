@@ -7,7 +7,8 @@ import 'package:morpheus/tweens/page_transition_opacity_tween.dart';
 /// Builds a parent-child material design navigation transition.
 class MorpheusPageTransition extends StatelessWidget {
   MorpheusPageTransition({
-    this.renderBox,
+    @required this.size,
+    @required this.offset,
     @required BuildContext context,
     @required this.animation,
     @required this.secondaryAnimation,
@@ -19,12 +20,15 @@ class MorpheusPageTransition extends StatelessWidget {
         assert(child != null),
         assert(settings != null),
         transitionContext = context,
-        renderBoxSize = renderBox?.size,
-        renderBoxOffset = renderBox?.localToGlobal(Offset.zero);
+        hasRenderBox = size == null || offset == null;
 
-  /// The [RenderBox] used to calculate the origin of the parent-child
-  /// transition.
-  final RenderBox renderBox;
+  /// Defines the initial [Size] of a parent-child transition.
+  final Size size;
+
+  /// Defines the initial [Offset] of a parent-child transition.
+  final Offset offset;
+
+  final bool hasRenderBox;
 
   final BuildContext transitionContext;
   final Animation<double> animation;
@@ -32,25 +36,15 @@ class MorpheusPageTransition extends StatelessWidget {
   final Widget child;
   final MorpheusRouteArguments settings;
 
-  /// The size of [renderBox].
-  ///
-  /// Returns null if [renderBox] is null.
-  final Size renderBoxSize;
-
-  /// The calculated [Offset] of [renderBox].
-  ///
-  /// Returns null if [renderBox] is null.
-  final Offset renderBoxOffset;
-
   /// Returns true if the parent widget spans the entire width of the screen.
   ///
   /// returns false if [renderBox] is null.
   bool get useVerticalTransition {
     // Return null if [renderBox] is null.
-    if (renderBox == null) return false;
+    if (!hasRenderBox) return false;
 
     final screenWidth = MediaQuery.of(transitionContext).size.width;
-    return renderBoxSize.width == screenWidth && renderBoxOffset.dx == 0.0;
+    return size.width == screenWidth && offset.dx == 0.0;
   }
 
   /// Returns an [Animation] used to animate the transition from the parent widget
@@ -110,7 +104,7 @@ class MorpheusPageTransition extends StatelessWidget {
   /// Returns a [RelativeRectTween] that is used to animate from the origin
   /// of [renderBox] to the size of the screen.
   RelativeRectTween positionTween(BoxConstraints constraints) {
-    final origin = renderBoxOffset & renderBoxSize;
+    final origin = offset & size;
     return RelativeRectTween(
       begin: RelativeRect.fromLTRB(
           origin.left,
@@ -152,7 +146,7 @@ class MorpheusPageTransition extends StatelessWidget {
       ),
     ));
 
-    if (renderBox == null) {
+    if (!hasRenderBox) {
       return buildDefaultTransition();
     }
 
@@ -237,10 +231,10 @@ class MorpheusPageTransition extends StatelessWidget {
   Widget buildBidirectionalTransition(Widget childScreen) {
     final Animation<double> scaleParentAnimation = Tween<double>(
       begin: 1.0,
-      end: MediaQuery.of(transitionContext).size.width / renderBoxSize.width,
+      end: MediaQuery.of(transitionContext).size.width / size.width,
     ).animate(positionAnimationCurve);
     final Animation<double> scaleChildAnimation = Tween<double>(
-      begin: renderBoxSize.width / MediaQuery.of(transitionContext).size.width,
+      begin: size.width / MediaQuery.of(transitionContext).size.width,
       end: 1.0,
     ).animate(positionAnimationCurve);
     final parentWidget = transitionWidget != null
@@ -267,9 +261,7 @@ class MorpheusPageTransition extends StatelessWidget {
               : ConstantTween<double>(1.0).animate(animation),
           child: childScreen,
         ),
-      )
-          .animate(positionAnimationCurve)
-          .value,
+      ).animate(positionAnimationCurve).value,
     );
   }
 
@@ -346,8 +338,8 @@ class MorpheusPageTransition extends StatelessWidget {
           padding: widget.padding,
           decoration: widget.decoration,
           foregroundDecoration: widget.foregroundDecoration,
-          width: renderBoxSize.width,
-          height: renderBoxSize.height,
+          width: size.width,
+          height: size.height,
           constraints: widget.constraints,
           margin: widget.margin,
           transform: widget.transform,

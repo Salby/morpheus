@@ -134,7 +134,8 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
 
     // Return page transition.
     return MorpheusPageTransition(
-      renderBox: _getRenderBox(),
+      size: _getRenderBox().size,
+      offset: _getRenderBox().localToGlobal(Offset.zero),
       context: context,
       animation: animation,
       secondaryAnimation: secondaryAnimation,

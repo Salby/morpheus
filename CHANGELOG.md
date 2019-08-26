@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0+2] - 2019-08-26
+
+### Fixes
+- Fixed a rendering error caused by the last fix :)
+
 ## [1.2.0+1] - 2019-08-26
 
 ### Fixes
