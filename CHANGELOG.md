@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.0] - 2019-08-26
 
 ### Added
 - Added a new 'default' transition for situations where no `parentKey` has been provided (This wasn't possible before).
