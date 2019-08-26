@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0+1] - 2019-08-26
+
+### Fixes
+- Fixed a bug where `MorpheusPageRoute` couldn't re-use the existing `RenderBox` and would throw an exception when popping a layer in the navigation stack.
+
 ## [1.2.0] - 2019-08-26
 
 ### Added

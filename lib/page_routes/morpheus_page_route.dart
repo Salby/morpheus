@@ -61,15 +61,30 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// This only affects bidirectional transitions.
   final bool scaleChild;
 
-  RenderBox _renderBox() {
+  /// Returns a [RenderBox] from a [GlobalKey] if one is provided, either
+  /// through the [parentKey] parameter or [settings.arguments].
+  ///
+  /// If no [GlobalKey] is provided, this method returns null.
+  RenderBox _getRenderBox() {
+    // Return the stored [RenderBox] if it exists.
+    if (_renderBox != null) return _renderBox;
+
     final arguments = settings.arguments as MorpheusRouteArguments;
     final key = parentKey ?? arguments?.parentKey;
 
     // Return null if [key] is null.
     if (key == null) return null;
 
-    return key.currentContext.findRenderObject();
+    // Get the [RenderBox].
+    final renderBox = key.currentContext.findRenderObject();
+
+    // Store the [RenderBox] for later.
+    _renderBox = renderBox;
+
+    return renderBox;
   }
+
+  RenderBox _renderBox;
 
   @override
   final Duration transitionDuration;
@@ -119,7 +134,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
 
     // Return page transition.
     return MorpheusPageTransition(
-      renderBox: _renderBox(),
+      renderBox: _getRenderBox(),
       context: context,
       animation: animation,
       secondaryAnimation: secondaryAnimation,
