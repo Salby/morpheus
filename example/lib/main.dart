@@ -59,6 +59,7 @@ class HomeScreen extends StatelessWidget {
   final profileKey = GlobalKey();
   final settingsKey = GlobalKey();
   final createKey = GlobalKey();
+  final cardKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -90,18 +91,46 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           Divider(height: 1.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              key: cardKey,
+              child: Material(
+                type: MaterialType.card,
+                borderRadius: BorderRadius.circular(12.0),
+                elevation: 4.0,
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: () => Navigator.of(context).pushNamed(
+                    '/create',
+                    arguments: MorpheusRouteArguments(
+                      parentKey: cardKey,
+                    ),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Create',
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         key: createKey,
-        child: Icon(Icons.add),
+        icon: Icon(Icons.add),
+        label: Text('Create'),
         onPressed: () => Navigator.of(context).pushNamed(
           '/create',
           arguments: MorpheusRouteArguments(
             parentKey: createKey,
             transitionColor: Theme.of(context).accentColor,
-            borderRadius: BorderRadius.circular(56.0),
+            borderRadius: BorderRadius.circular(24.0),
           ),
         ),
       ),

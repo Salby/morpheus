@@ -58,7 +58,7 @@ class MorpheusPageTransition extends StatelessWidget {
   Animation<double> get parentToChildAnimation {
     // Define when the animation should end.
     final animationEnd =
-    transitionWidget == null ? 0.3 : useVerticalTransition ? 0.1 : 0.2;
+        transitionWidget == null ? 0.3 : useVerticalTransition ? 0.1 : 0.2;
 
     return Tween<double>(
       begin: 0.0,
@@ -81,16 +81,16 @@ class MorpheusPageTransition extends StatelessWidget {
   /// Returns a [BorderRadiusTween] with an initial value of
   /// [settings.borderRadius].
   BorderRadiusTween get borderRadius => BorderRadiusTween(
-    begin: settings.borderRadius ?? BorderRadius.circular(0.0),
-    end: BorderRadius.circular(0.0),
-  );
+        begin: settings.borderRadius ?? BorderRadius.circular(0.0),
+        end: BorderRadius.circular(0.0),
+      );
 
   /// Returns a curve that can be applied to all transitions that are
   /// synchronized with [positionTween].
   Animation<double> get positionAnimationCurve {
     // Define where on the timeline the animation should start.
     final animationStart =
-    transitionWidget != null ? 0.0 : useVerticalTransition ? 0.1 : 0.2;
+        transitionWidget != null ? 0.0 : useVerticalTransition ? 0.1 : 0.2;
 
     return CurvedAnimation(
       parent: animation,
@@ -132,7 +132,7 @@ class MorpheusPageTransition extends StatelessWidget {
     // Define at which point during the transition the scrim will start to
     // show.
     final scrimAnimationStart =
-    useVerticalTransition ? 0.0 : transitionWidget != null ? 0.0 : 0.2;
+        useVerticalTransition ? 0.0 : transitionWidget != null ? 0.0 : 0.2;
 
     // Define the scrim animation.
     final Animation<Color> scrimAnimation = ColorTween(
@@ -173,7 +173,7 @@ class MorpheusPageTransition extends StatelessWidget {
               // [renderBox] to fill the entire screen.
               PositionedTransition(
                 rect:
-                positionTween(constraints).animate(positionAnimationCurve),
+                    positionTween(constraints).animate(positionAnimationCurve),
                 child: AnimatedBuilder(
                   animation: positionAnimationCurve,
                   child: OverflowBox(
@@ -196,8 +196,8 @@ class MorpheusPageTransition extends StatelessWidget {
                         ),
                         settings.transitionToChild
                             ? useVerticalTransition
-                            ? buildVerticalTransition(child)
-                            : buildBidirectionalTransition(child)
+                                ? buildVerticalTransition(child)
+                                : buildBidirectionalTransition(child)
                             : child,
                       ],
                     ),
@@ -226,15 +226,24 @@ class MorpheusPageTransition extends StatelessWidget {
         end: childScreen,
       )
           .animate(CurvedAnimation(
-        parent: animation,
-        curve: Curves.fastOutSlowIn,
-      ))
+            parent: animation,
+            curve: Curves.fastOutSlowIn,
+          ))
           .value,
     );
   }
 
   /// TODO: Document method.
   Widget buildBidirectionalTransition(Widget childScreen) {
+    final fadeInAnimation = CurvedAnimation(
+      parent: animation,
+      curve: Interval(
+        0.5,
+        1.0,
+        curve: Curves.fastOutSlowIn,
+      ),
+    );
+
     final Animation<double> scaleParentAnimation = Tween<double>(
       begin: 1.0,
       end: MediaQuery.of(transitionContext).size.width / renderBoxSize.width,
@@ -245,11 +254,24 @@ class MorpheusPageTransition extends StatelessWidget {
     ).animate(positionAnimationCurve);
     final parentWidget = transitionWidget != null
         ? ScaleTransition(
-      alignment: Alignment.center,
-      scale: scaleParentAnimation,
-      child: transitionWidget,
-    )
+            alignment: Alignment.center,
+            scale: scaleParentAnimation,
+            child: transitionWidget,
+          )
         : Container();
+
+    if (transitionWidget == null)
+      return FadeTransition(
+        opacity: fadeInAnimation,
+        child: ScaleTransition(
+          alignment: Alignment.topCenter,
+          scale: settings.scaleChild
+              ? scaleChildAnimation
+              : ConstantTween(1.0).animate(positionAnimationCurve),
+          child: childScreen,
+        ),
+      );
+
     return FadeTransition(
       opacity: PageTransitionOpacityTween(
         begin: 0.0,
@@ -267,9 +289,7 @@ class MorpheusPageTransition extends StatelessWidget {
               : ConstantTween<double>(1.0).animate(animation),
           child: childScreen,
         ),
-      )
-          .animate(positionAnimationCurve)
-          .value,
+      ).animate(positionAnimationCurve).value,
     );
   }
 
