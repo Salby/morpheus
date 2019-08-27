@@ -249,6 +249,17 @@ class MorpheusPageTransition extends StatelessWidget {
   /// [transitionWidget] is scaled up before it fades into the [childScreen]
   /// that ends up at full-size.
   Widget buildBidirectionalTransition(Widget childScreen) {
+    // Controls the opacity of the [childScreen] in a transition where there is
+    // no transition widget.
+    final fadeInAnimation = CurvedAnimation(
+      parent: animation,
+      curve: Interval(
+        0.5,
+        1.0,
+        curve: Curves.fastOutSlowIn,
+      ),
+    );
+
     // The animation that controls the scale of the parent widget.
     final Animation<double> scaleParentAnimation = Tween<double>(
       begin: 1.0,
@@ -271,6 +282,19 @@ class MorpheusPageTransition extends StatelessWidget {
             child: transitionWidget,
           )
         : Container();
+
+    // This transition is used in case there is no transition widget.
+    if (transitionWidget == null)
+      return FadeTransition(
+        opacity: fadeInAnimation,
+        child: ScaleTransition(
+          alignment: Alignment.topCenter,
+          scale: settings.scaleChild
+              ? scaleChildAnimation
+              : ConstantTween(1.0).animate(positionAnimationCurve),
+          child: childScreen,
+        ),
+      );
 
     return FadeTransition(
       opacity: PageTransitionOpacityTween(

@@ -93,15 +93,16 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         key: createKey,
-        child: Icon(Icons.add),
+        icon: Icon(Icons.add),
+        label: Text('Create'),
         onPressed: () => Navigator.of(context).pushNamed(
           '/create',
           arguments: MorpheusRouteArguments(
             parentKey: createKey,
             transitionColor: Theme.of(context).accentColor,
-            borderRadius: BorderRadius.circular(56.0),
+            borderRadius: BorderRadius.circular(24.0),
           ),
         ),
       ),

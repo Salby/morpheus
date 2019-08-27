@@ -1,5 +1,13 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Added documentation for `MorpheusPageRoute` transitions.
+
+### Changed
+- Improved `MorpheusPageRoute` bidirectional transition when there is no transition widget.
+
 ## [1.2.0+3] - 2019-08-26
 
 ### Changed
