@@ -62,7 +62,6 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   final bool scaleChild;
 
   RenderBox _findRenderBox() {
-
     final arguments = settings.arguments as MorpheusRouteArguments;
     final key = parentKey ?? arguments?.parentKey;
 
@@ -83,7 +82,6 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
       _renderBox = renderBox;
       return renderBox;
     }
-
   }
 
   RenderBox _renderBox;
@@ -108,20 +106,20 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
 
   @override
   Widget buildPage(
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      ) {
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+  ) {
     return Builder(builder: builder);
   }
 
   @override
   Widget buildTransitions(
-      BuildContext context,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child,
-      ) {
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
     final routeSettings = settings.arguments as MorpheusRouteArguments;
 
     // Define transition settings.
