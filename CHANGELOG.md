@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.0+4] - 2019-08-29
 
 ### Added
 - Added documentation for `MorpheusPageRoute` transitions.
