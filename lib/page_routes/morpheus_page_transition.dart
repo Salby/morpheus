@@ -343,7 +343,7 @@ class MorpheusPageTransition extends StatelessWidget {
     return Container(
       color: scrimAnimation.value,
       child: FadeTransition(
-        opacity: positionAnimationCurve,
+        opacity: Curves.fastOutSlowIn,
         child: ScaleTransition(
           scale: scaleChildAnimation,
           child: child,

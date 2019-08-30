@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.0+5] - 2019-08-30
+
+### Changed
+- Improved `MorpheusPageRoute` default transition.
+
 ## [1.2.0+4] - 2019-08-29
 
 ### Added
