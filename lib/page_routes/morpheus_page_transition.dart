@@ -340,10 +340,19 @@ class MorpheusPageTransition extends StatelessWidget {
       curve: Curves.fastOutSlowIn,
     ));
 
+    // Controls the opacity of the child screen.
+    final Animation<double> fadeInAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: animation,
+      curve: Curves.fastOutSlowIn,
+    ));
+
     return Container(
       color: scrimAnimation.value,
       child: FadeTransition(
-        opacity: Curves.fastOutSlowIn,
+        opacity: fadeInAnimation,
         child: ScaleTransition(
           scale: scaleChildAnimation,
           child: child,
