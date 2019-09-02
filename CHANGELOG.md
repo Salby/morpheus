@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.1] - 2019-09-02
+
+### Changed
+- `MorpheusTabView` only transitions when a new child is provided.
+
 ## [1.2.0+6] - 2019-08-30
 
 ### Fixes

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:morpheus/morpheus.dart';
 
 void main() => runApp(MyApp());
@@ -55,42 +54,25 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final profileKey = GlobalKey();
   final settingsKey = GlobalKey();
   final createKey = GlobalKey();
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            key: profileKey,
-            title: Text('Profile'),
-            onTap: () => Navigator.of(context).pushNamed(
-              '/profile',
-              arguments: MorpheusRouteArguments(
-                parentKey: profileKey,
-              ),
-            ),
-          ),
-          Divider(height: 1.0),
-          ListTile(
-            key: settingsKey,
-            title: Text('Settings'),
-            onTap: () => Navigator.of(context).pushNamed(
-              '/settings',
-              arguments: MorpheusRouteArguments(
-                parentKey: settingsKey,
-              ),
-            ),
-          ),
-          Divider(height: 1.0),
-        ],
+      body: MorpheusTabView(
+        child: <Widget>[
+          ProfileScreen(),
+          SettingsScreen(),
+        ][_currentIndex],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
@@ -105,6 +87,20 @@ class HomeScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(24.0),
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle),
+            title: Text('Profile'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            title: Text('Settings'),
+          ),
+        ],
       ),
     );
   }

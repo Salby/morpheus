@@ -27,15 +27,52 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
   _TopLevelScaleTween _scaleTween;
   _TopLevelChildTween _childTween;
 
+  /// Change the value of this property after the initial build to make sure
+  /// that the transition isn't built when the user hasn't changed screens.
+  bool _initialBuild = true;
+
+  /// Used to compare with the new [widget.child] to determine whether to
+  /// animate a change or not.
+  Widget _oldWidget;
+
+  /// Returns true if [widget.child] is different from [_oldWidget].
+  bool get _isNewWidget => !Widget.canUpdate(_oldWidget, widget.child);
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Update [_oldWidget] when the animation ends.
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() => _oldWidget = widget.child);
+
+        // Mark [_initialBuild] as false after the first screen has appeared.
+        if (_initialBuild) {
+          _initialBuild = false;
+        }
+      }
+    });
+  }
+
+  /// Builds the top-level transition.
+  ///
+  /// The transition is only built when [widget.child] changes as defined by
+  /// [_isNewWidget] and if [_initialBuild] is false.
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: _opacityTween.evaluate(animation),
-      child: Transform.scale(
-        scale: _scaleTween.evaluate(animation),
-        child: _childTween.evaluate(animation),
-      ),
-    );
+    // Build transition if a new widget has been supplied.
+    if (_isNewWidget && !_initialBuild) {
+      return Opacity(
+        opacity: _opacityTween.evaluate(animation),
+        child: Transform.scale(
+          scale: _scaleTween.evaluate(animation),
+          child: _childTween.evaluate(animation),
+        ),
+      );
+    } else {
+      return widget.child;
+    }
   }
 
   @override
