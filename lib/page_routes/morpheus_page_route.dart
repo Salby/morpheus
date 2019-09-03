@@ -69,22 +69,36 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     if (key == null) return null;
 
     // Find the [RenderBox] attached to [key].
-    final renderBox = key.currentContext.findRenderObject();
+    final renderBox = key.currentContext?.findRenderObject();
 
     // If [renderBox] is null but [_renderBox] isn't, return [_renderBox].
     if (renderBox == null) {
       if (_renderBox != null) {
+        // Return the stored [RenderBox].
         return _renderBox;
       } else {
         return null;
       }
     } else {
+      // Update local [RenderBox] values.
       _renderBox = renderBox;
+      _size = _renderBox?.size;
+      _offset = _renderBox?.localToGlobal(Offset.zero);
       return renderBox;
     }
   }
 
+  /// A [RenderBox] used when building a parent-child transition to determine
+  /// what, if any, origin to animate from.
   RenderBox _renderBox;
+
+  /// Informs a parent-child transition what size the child-screen should
+  /// animate from.
+  Size _size;
+
+  /// Informs a parent-child transition at what position the transition should
+  /// originate from.
+  Offset _offset;
 
   @override
   final Duration transitionDuration;
@@ -132,9 +146,14 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
       scaleChild: routeSettings?.scaleChild ?? scaleChild,
     );
 
+    // Find the renderBox stuff and store it for later.
+    _findRenderBox();
+
     // Return page transition.
     return MorpheusPageTransition(
-      renderBox: _findRenderBox(),
+      renderBox: _renderBox,
+      renderBoxSize: _size,
+      renderBoxOffset: _offset,
       context: context,
       animation: animation,
       secondaryAnimation: secondaryAnimation,

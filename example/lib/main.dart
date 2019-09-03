@@ -70,8 +70,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: MorpheusTabView(
         child: <Widget>[
-          ProfileScreen(),
-          SettingsScreen(),
+          ProfileScreen(
+            key: Key('profile'),
+          ),
+          SettingsScreen(
+            key: Key('settings'),
+          ),
         ][_currentIndex],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -107,6 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ProfileScreen extends StatelessWidget {
+  ProfileScreen({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,6 +124,8 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class SettingsScreen extends StatelessWidget {
+  SettingsScreen({Key key}) : super(key: key);
+
   final cookiesKey = GlobalKey();
 
   @override
