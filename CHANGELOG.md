@@ -5,6 +5,9 @@
 ### Changed
 - `MorpheusTabView` will only ignore a new child if it has the same key as the previous child.
 
+### Fixed
+- Fixed issue where popping a `MorpheusPageRoute` that uses a `parentKey` would throw an exception.
+
 ## [1.2.1] - 2019-09-02
 
 ### Changed
@@ -12,7 +15,7 @@
 
 ## [1.2.0+6] - 2019-08-30
 
-### Fixes
+### Fixed
 - Fixed change in `MorpheusPageRoute` default transition.
 
 ## [1.2.0+5] - 2019-08-30

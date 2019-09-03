@@ -8,6 +8,8 @@ import 'package:morpheus/tweens/page_transition_opacity_tween.dart';
 class MorpheusPageTransition extends StatelessWidget {
   MorpheusPageTransition({
     this.renderBox,
+    this.renderBoxSize,
+    this.renderBoxOffset,
     @required BuildContext context,
     @required this.animation,
     @required this.secondaryAnimation,
@@ -18,12 +20,10 @@ class MorpheusPageTransition extends StatelessWidget {
         assert(secondaryAnimation != null),
         assert(child != null),
         assert(settings != null),
-        transitionContext = context,
-        renderBoxSize = renderBox?.size,
-        renderBoxOffset = renderBox?.localToGlobal(Offset.zero);
+        transitionContext = context;
 
   /// The [RenderBox] used to calculate the origin of the parent-child
-  /// transition.
+  /// transition. Used to determine which transition will be used.
   final RenderBox renderBox;
 
   final BuildContext transitionContext;
@@ -32,14 +32,14 @@ class MorpheusPageTransition extends StatelessWidget {
   final Widget child;
   final MorpheusRouteArguments settings;
 
-  /// The size of [renderBox].
-  ///
-  /// Returns null if [renderBox] is null.
+  /// The size of [renderBox]. Used by [buildVerticalTransition] or
+  /// [buildBidirectionalTransition] to determine the initial size of the child
+  /// screen.
   final Size renderBoxSize;
 
-  /// The calculated [Offset] of [renderBox].
-  ///
-  /// Returns null if [renderBox] is null.
+  /// The calculated [Offset] of [renderBox]. Used by [buildVerticalTransition]
+  /// or [buildBidirectionalTransition] to determine the initial position of
+  /// the child screen.
   final Offset renderBoxOffset;
 
   /// Returns true if the parent widget spans the entire width of the screen.
