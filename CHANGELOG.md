@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.2] - 2019-09-03
+
+### Changed
+- `MorpheusTabView` will only ignore a new child if it has the same key as the previous child.
+
 ## [1.2.1] - 2019-09-02
 
 ### Changed

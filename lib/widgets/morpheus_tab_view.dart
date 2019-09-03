@@ -33,10 +33,17 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
 
   /// Used to compare with the new [widget.child] to determine whether to
   /// animate a change or not.
-  Widget _oldWidget;
+  Key _currentKey;
 
   /// Returns true if [widget.child] is different from [_oldWidget].
-  bool get _isNewWidget => !Widget.canUpdate(_oldWidget, widget.child);
+  bool get _isOldWidget {
+    if (widget.child.key == null && _currentKey == null) {
+      return false;
+    } else if (_initialBuild) {
+      return true;
+    }
+    return widget.child.key == _currentKey;
+  }
 
   @override
   void initState() {
@@ -45,7 +52,8 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
     // Update [_oldWidget] when the animation ends.
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        setState(() => _oldWidget = widget.child);
+        //setState(() => _oldWidget = widget.child);
+        setState(() => _currentKey = widget.child.key);
 
         // Mark [_initialBuild] as false after the first screen has appeared.
         if (_initialBuild) {
@@ -62,7 +70,17 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
   @override
   Widget build(BuildContext context) {
     // Build transition if a new widget has been supplied.
-    if (_isNewWidget && !_initialBuild) {
+    final opacity = _isOldWidget ? 1.0 : _opacityTween.evaluate(animation);
+    final scale = _isOldWidget ? 1.0 : _scaleTween.evaluate(animation);
+    final child = _isOldWidget ? widget.child : _childTween.evaluate(animation);
+    return Opacity(
+      opacity: opacity,
+      child: Transform.scale(
+        scale: scale,
+        child: child,
+      ),
+    );
+    /*if (_isNewWidget && !_initialBuild) {
       return Opacity(
         opacity: _opacityTween.evaluate(animation),
         child: Transform.scale(
@@ -72,7 +90,7 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
       );
     } else {
       return widget.child;
-    }
+    }*/
   }
 
   @override
