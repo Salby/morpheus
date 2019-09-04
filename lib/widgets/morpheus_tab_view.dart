@@ -27,10 +27,6 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
   _TopLevelScaleTween _scaleTween;
   _TopLevelChildTween _childTween;
 
-  /// Change the value of this property after the initial build to make sure
-  /// that the transition isn't built when the user hasn't changed screens.
-  bool _initialBuild = true;
-
   /// Used to compare with the new [widget.child] to determine whether to
   /// animate a change or not.
   Key _currentKey;
@@ -39,8 +35,6 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
   bool get _isOldWidget {
     if (widget.child.key == null && _currentKey == null) {
       return false;
-    } else if (_initialBuild) {
-      return true;
     }
     return widget.child.key == _currentKey;
   }
@@ -49,16 +43,16 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
   void initState() {
     super.initState();
 
+    // Set initial [_currentKey] if [widget.child] has a key.
+    if (widget.child.key != null) {
+      setState(() => _currentKey = widget.child.key);
+    }
+
     // Update [_oldWidget] when the animation ends.
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         //setState(() => _oldWidget = widget.child);
         setState(() => _currentKey = widget.child.key);
-
-        // Mark [_initialBuild] as false after the first screen has appeared.
-        if (_initialBuild) {
-          _initialBuild = false;
-        }
       }
     });
   }

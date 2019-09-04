@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.2+1] - 2019-09-04
+
+### Fixed
+- Fixed some strange `MorpheusTabView` behavior.
+
 ## [1.2.2] - 2019-09-03
 
 ### Changed
