@@ -14,9 +14,9 @@ jobs:
         with:
           java-version: '12.x'
       - name: Use the latest stable version of Flutter.
-        uses: subosito/flutter-action@v1
-          with:
-            channel: 'stable'
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable'
       - name: Get pub dependencies.
         run: flutter pub get
       - name: Run Flutter tests.
