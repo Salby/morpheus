@@ -1,7 +1,7 @@
 # Morpheus
 
 ![Pub](https://img.shields.io/pub/v/morpheus.svg)
-[![Build Status](https://travis-ci.org/Salby/morpheus.svg?branch=master)](https://travis-ci.org/Salby/morpheus)
+[![Actions Status](https://github.com/Salby/morpheus/workflows/Test/badge.svg)](https://github.com/Salby/morpheus/actions)
 
 A Flutter package for easily implementing Material Design navigation transitions.
 
