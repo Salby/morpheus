@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class PageTransitionChildTween extends Tween<Widget> {
+class PageTransitionChildTween extends Tween<Widget?> {
   PageTransitionChildTween({
-    Widget begin,
-    Widget end,
+    Widget? begin,
+    Widget? end,
   }) : super(
           begin: begin,
           end: end,
         );
 
-  Widget lerp(double t) {
+  Widget? lerp(double t) {
     if (t < 1.0 / 3) {
       return begin;
     } else {

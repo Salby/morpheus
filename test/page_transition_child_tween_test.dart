@@ -5,9 +5,9 @@ import 'package:morpheus/tweens/page_transition_child_tween.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  PageTransitionChildTween tween;
-  Widget firstWidget;
-  Widget secondWidget;
+  late PageTransitionChildTween tween;
+  Widget? firstWidget;
+  Widget? secondWidget;
 
   setUp(() {
     firstWidget = Container(key: Key('first'));

@@ -10,21 +10,16 @@ class MorpheusPageTransition extends StatelessWidget {
     this.renderBox,
     this.renderBoxSize,
     this.renderBoxOffset,
-    @required BuildContext context,
-    @required this.animation,
-    @required this.secondaryAnimation,
-    @required this.child,
-    @required this.settings,
-  })  : assert(context != null),
-        assert(animation != null),
-        assert(secondaryAnimation != null),
-        assert(child != null),
-        assert(settings != null),
-        transitionContext = context;
+    required BuildContext context,
+    required this.animation,
+    required this.secondaryAnimation,
+    required this.child,
+    required this.settings,
+  }) : transitionContext = context;
 
   /// The [RenderBox] used to calculate the origin of the parent-child
   /// transition. Used to determine which transition will be used.
-  final RenderBox renderBox;
+  final RenderBox? renderBox;
 
   final BuildContext transitionContext;
   final Animation<double> animation;
@@ -35,12 +30,12 @@ class MorpheusPageTransition extends StatelessWidget {
   /// The size of [renderBox]. Used by [buildVerticalTransition] or
   /// [buildBidirectionalTransition] to determine the initial size of the child
   /// screen.
-  final Size renderBoxSize;
+  final Size? renderBoxSize;
 
   /// The calculated [Offset] of [renderBox]. Used by [buildVerticalTransition]
   /// or [buildBidirectionalTransition] to determine the initial position of
   /// the child screen.
-  final Offset renderBoxOffset;
+  final Offset? renderBoxOffset;
 
   /// Returns true if the parent widget spans the entire width of the screen.
   ///
@@ -50,15 +45,18 @@ class MorpheusPageTransition extends StatelessWidget {
     if (renderBox == null) return false;
 
     final screenWidth = MediaQuery.of(transitionContext).size.width;
-    return renderBoxSize.width == screenWidth && renderBoxOffset.dx == 0.0;
+    return renderBoxSize!.width == screenWidth && renderBoxOffset!.dx == 0.0;
   }
 
   /// Returns an [Animation] used to animate the transition from the parent widget
   /// to the child widget.
   Animation<double> get parentToChildAnimation {
     // Define when the animation should end.
-    final animationEnd =
-        transitionWidget == null ? 0.3 : useVerticalTransition ? 0.1 : 0.2;
+    final animationEnd = transitionWidget == null
+        ? 0.3
+        : useVerticalTransition
+            ? 0.1
+            : 0.2;
 
     return Tween<double>(
       begin: 0.0,
@@ -81,7 +79,8 @@ class MorpheusPageTransition extends StatelessWidget {
   /// Returns a [BorderRadiusTween] with an initial value of
   /// [settings.borderRadius].
   BorderRadiusTween get borderRadius => BorderRadiusTween(
-        begin: settings.borderRadius ?? BorderRadius.circular(0.0),
+        begin: settings.borderRadius as BorderRadius? ??
+            BorderRadius.circular(0.0),
         end: BorderRadius.circular(0.0),
       );
 
@@ -89,8 +88,11 @@ class MorpheusPageTransition extends StatelessWidget {
   /// synchronized with [positionTween].
   Animation<double> get positionAnimationCurve {
     // Define where on the timeline the animation should start.
-    final animationStart =
-        transitionWidget != null ? 0.0 : useVerticalTransition ? 0.1 : 0.2;
+    final animationStart = transitionWidget != null
+        ? 0.0
+        : useVerticalTransition
+            ? 0.1
+            : 0.2;
 
     return CurvedAnimation(
       parent: animation,
@@ -110,7 +112,7 @@ class MorpheusPageTransition extends StatelessWidget {
   /// Returns a [RelativeRectTween] that is used to animate from the origin
   /// of [renderBox] to the size of the screen.
   RelativeRectTween positionTween(BoxConstraints constraints) {
-    final origin = renderBoxOffset & renderBoxSize;
+    final origin = renderBoxOffset! & renderBoxSize!;
     return RelativeRectTween(
       begin: RelativeRect.fromLTRB(
           origin.left,
@@ -131,11 +133,14 @@ class MorpheusPageTransition extends StatelessWidget {
   Widget build(BuildContext context) {
     // Define at which point during the transition the scrim will start to
     // show.
-    final scrimAnimationStart =
-        useVerticalTransition ? 0.0 : transitionWidget != null ? 0.0 : 0.2;
+    final scrimAnimationStart = useVerticalTransition
+        ? 0.0
+        : transitionWidget != null
+            ? 0.0
+            : 0.2;
 
     // Define the scrim animation.
-    final Animation<Color> scrimAnimation = ColorTween(
+    final Animation<Color?> scrimAnimation = ColorTween(
       begin: settings.scrimColor.withOpacity(0.0),
       end: settings.scrimColor,
     ).animate(CurvedAnimation(
@@ -156,10 +161,8 @@ class MorpheusPageTransition extends StatelessWidget {
       return buildDefaultTransition();
     }
 
-    final transitionColor = settings.transitionColor ??
-        Theme.of(context).colorScheme?.surface ??
-        Theme.of(context).cardTheme.color ??
-        Theme.of(context).cardColor;
+    final transitionColor =
+        settings.transitionColor ?? Theme.of(context).colorScheme.surface;
 
     // Return the animated scrim with the appropriate transition as child.
     return Container(
@@ -196,9 +199,9 @@ class MorpheusPageTransition extends StatelessWidget {
                         ),
                         settings.transitionToChild
                             ? useVerticalTransition
-                                ? buildVerticalTransition(child)
-                                : buildBidirectionalTransition(child)
-                            : child,
+                                ? buildVerticalTransition(child!)
+                                : buildBidirectionalTransition(child!)
+                            : child!,
                       ],
                     ),
                   ),
@@ -263,12 +266,12 @@ class MorpheusPageTransition extends StatelessWidget {
     // The animation that controls the scale of the parent widget.
     final Animation<double> scaleParentAnimation = Tween<double>(
       begin: 1.0,
-      end: MediaQuery.of(transitionContext).size.width / renderBoxSize.width,
+      end: MediaQuery.of(transitionContext).size.width / renderBoxSize!.width,
     ).animate(positionAnimationCurve);
 
     // The animation that controls the scale of the child screen.
     final Animation<double> scaleChildAnimation = Tween<double>(
-      begin: renderBoxSize.width / MediaQuery.of(transitionContext).size.width,
+      begin: renderBoxSize!.width / MediaQuery.of(transitionContext).size.width,
       end: 1.0,
     ).animate(positionAnimationCurve);
 
@@ -323,7 +326,7 @@ class MorpheusPageTransition extends StatelessWidget {
   Widget buildDefaultTransition() {
     // Controls the color of the scrim, from fully transparent to
     // [settings.scrimColor].
-    final Animation<Color> scrimAnimation = ColorTween(
+    final Animation<Color?> scrimAnimation = ColorTween(
       begin: settings.scrimColor.withOpacity(0.0),
       end: settings.scrimColor,
     ).animate(CurvedAnimation(
@@ -373,7 +376,7 @@ class MorpheusPageTransition extends StatelessWidget {
   /// * [Container]
   /// * [ListTile]
   /// * [FloatingActionButton] (Not extended)
-  Widget get transitionWidget {
+  Widget? get transitionWidget {
     final parentWidget = settings.parentKey?.currentWidget;
 
     /// Return null if [settings.parentKey] is null.
@@ -398,7 +401,6 @@ class MorpheusPageTransition extends StatelessWidget {
             selected: widget.selected,
           ),
         );
-        break;
       case Container:
         final widget = parentWidget as Container;
         return Container(
@@ -406,14 +408,13 @@ class MorpheusPageTransition extends StatelessWidget {
           padding: widget.padding,
           decoration: widget.decoration,
           foregroundDecoration: widget.foregroundDecoration,
-          width: renderBoxSize.width,
-          height: renderBoxSize.height,
+          width: renderBoxSize!.width,
+          height: renderBoxSize!.height,
           constraints: widget.constraints,
           margin: widget.margin,
           transform: widget.transform,
           child: widget.child,
         );
-        break;
       case FloatingActionButton:
         final widget = parentWidget as FloatingActionButton;
         if (widget.isExtended) return null;
@@ -421,7 +422,7 @@ class MorpheusPageTransition extends StatelessWidget {
             Theme.of(transitionContext)
                 .floatingActionButtonTheme
                 .backgroundColor ??
-            Theme.of(transitionContext).accentColor;
+            Theme.of(transitionContext).colorScheme.secondary;
         return Material(
           color: backgroundColor,
           shape: RoundedRectangleBorder(
@@ -431,10 +432,8 @@ class MorpheusPageTransition extends StatelessWidget {
             child: widget.child,
           ),
         );
-        break;
       default:
         return null;
-        break;
     }
   }
 }

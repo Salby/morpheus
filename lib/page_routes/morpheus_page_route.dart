@@ -20,7 +20,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// The values of [builder], [parentKey], [transitionDuration], [elevation],
   /// and [scrimColor] must not be null.
   MorpheusPageRoute({
-    @required this.builder,
+    required this.builder,
     this.transitionDuration = const Duration(milliseconds: 450),
     this.parentKey,
     this.scrimColor = Colors.black45,
@@ -28,10 +28,8 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     this.transitionColor,
     this.transitionToChild = true,
     this.scaleChild = true,
-    RouteSettings settings,
-  })  : assert(builder != null),
-        assert(transitionDuration != null),
-        super(settings: settings);
+    RouteSettings? settings,
+  }) : super(settings: settings);
 
   /// Builds the contents of the route.
   final WidgetBuilder builder;
@@ -39,17 +37,17 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// A [GlobalKey] that is used to calculate the transition so that it looks
   /// like the element that [parentKey] is attached to turns into a new page
   /// with the contents of [builder].
-  final GlobalKey parentKey;
+  final GlobalKey? parentKey;
 
   /// The color of the overlay that covers the content behind the transition.
   final Color scrimColor;
 
   /// Defines the initial border-radius of the transition.
-  final BorderRadiusGeometry borderRadius;
+  final BorderRadiusGeometry? borderRadius;
 
   /// The color that is used when transitioning from the parent element to the
   /// contents of [builder].
-  final Color transitionColor;
+  final Color? transitionColor;
 
   /// Defines whether the animation should transition from a temporary widget
   /// into the contents of [builder] or not.
@@ -61,8 +59,8 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   /// This only affects bidirectional transitions.
   final bool scaleChild;
 
-  RenderBox _findRenderBox() {
-    final arguments = settings.arguments as MorpheusRouteArguments;
+  RenderBox? _findRenderBox() {
+    final arguments = settings.arguments as MorpheusRouteArguments?;
     final key = parentKey ?? arguments?.parentKey;
 
     // Return null if [key] is null.
@@ -81,24 +79,24 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
       }
     } else {
       // Update local [RenderBox] values.
-      _renderBox = renderBox;
+      _renderBox = renderBox as RenderBox?;
       _size = _renderBox?.size;
       _offset = _renderBox?.localToGlobal(Offset.zero);
-      return renderBox;
+      return renderBox as RenderBox?;
     }
   }
 
   /// A [RenderBox] used when building a parent-child transition to determine
   /// what, if any, origin to animate from.
-  RenderBox _renderBox;
+  RenderBox? _renderBox;
 
   /// Informs a parent-child transition what size the child-screen should
   /// animate from.
-  Size _size;
+  Size? _size;
 
   /// Informs a parent-child transition at what position the transition should
   /// originate from.
-  Offset _offset;
+  Offset? _offset;
 
   @override
   final Duration transitionDuration;
@@ -110,10 +108,10 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
   final bool barrierDismissible = false;
 
   @override
-  final Color barrierColor = null;
+  final Color? barrierColor = null;
 
   @override
-  final String barrierLabel = null;
+  final String? barrierLabel = null;
 
   @override
   final bool maintainState = true;
@@ -134,7 +132,7 @@ class MorpheusPageRoute<T> extends PageRoute<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final routeSettings = settings.arguments as MorpheusRouteArguments;
+    final routeSettings = settings.arguments as MorpheusRouteArguments?;
 
     // Define transition settings.
     final transitionSettings = MorpheusRouteArguments(

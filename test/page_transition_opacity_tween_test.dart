@@ -3,10 +3,10 @@ import 'package:morpheus/tweens/page_transition_opacity_tween.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  PageTransitionOpacityTween tween;
+  late PageTransitionOpacityTween tween;
 
   setUp(() {
-    tween = PageTransitionOpacityTween();
+    tween = PageTransitionOpacityTween(begin: 0.0, end: 1.0);
   });
 
   test('Fully opaque at beginning', () {

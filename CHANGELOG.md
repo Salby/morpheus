@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.3] - 2021-09-12
+
+- Migrated to null safety.
+
 ## [1.2.2+1] - 2019-09-04
 
 ### Fixed

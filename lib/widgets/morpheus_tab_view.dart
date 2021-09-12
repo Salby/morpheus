@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 /// the feel of the animation.
 class MorpheusTabView extends ImplicitlyAnimatedWidget {
   MorpheusTabView({
-    @required this.child,
+    required this.child,
     Curve curve = Curves.fastOutSlowIn,
     Duration duration = const Duration(milliseconds: 300),
   }) : super(
@@ -23,13 +23,13 @@ class MorpheusTabView extends ImplicitlyAnimatedWidget {
 }
 
 class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
-  _TopLevelOpacityTween _opacityTween;
-  _TopLevelScaleTween _scaleTween;
-  _TopLevelChildTween _childTween;
+  _TopLevelOpacityTween? _opacityTween;
+  _TopLevelScaleTween? _scaleTween;
+  _TopLevelChildTween? _childTween;
 
   /// Used to compare with the new [widget.child] to determine whether to
   /// animate a change or not.
-  Key _currentKey;
+  Key? _currentKey;
 
   /// Returns true if [widget.child] is different from [_oldWidget].
   bool get _isOldWidget {
@@ -64,9 +64,12 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
   @override
   Widget build(BuildContext context) {
     // Build transition if a new widget has been supplied.
-    final opacity = _isOldWidget ? 1.0 : _opacityTween.evaluate(animation);
-    final scale = _isOldWidget ? 1.0 : _scaleTween.evaluate(animation);
-    final child = _isOldWidget ? widget.child : _childTween.evaluate(animation);
+    final double opacity =
+        _isOldWidget ? 1.0 : _opacityTween!.evaluate(animation) as double;
+    final double scale =
+        _isOldWidget ? 1.0 : _scaleTween!.evaluate(animation) as double;
+    final Widget? child =
+        _isOldWidget ? widget.child : _childTween!.evaluate(animation);
     return Opacity(
       opacity: opacity,
       child: Transform.scale(
@@ -74,35 +77,35 @@ class _MorpheusTabViewState extends AnimatedWidgetBaseState<MorpheusTabView> {
         child: child,
       ),
     );
-    /*if (_isNewWidget && !_initialBuild) {
-      return Opacity(
-        opacity: _opacityTween.evaluate(animation),
-        child: Transform.scale(
-          scale: _scaleTween.evaluate(animation),
-          child: _childTween.evaluate(animation),
-        ),
-      );
-    } else {
-      return widget.child;
-    }*/
   }
 
   @override
   void forEachTween(visitor) {
     _opacityTween = visitor(
-        _opacityTween, 1.0, (opacity) => _TopLevelOpacityTween(begin: opacity));
-    _scaleTween =
-        visitor(_scaleTween, 1.0, (scale) => _TopLevelScaleTween(begin: scale));
-    _childTween = visitor(_childTween, widget.child,
-        (child) => _TopLevelChildTween(begin: child));
+      _opacityTween,
+      1.0,
+      (opacity) => _TopLevelOpacityTween(begin: opacity),
+    ) as _TopLevelOpacityTween?;
+
+    _scaleTween = visitor(
+      _scaleTween,
+      1.0,
+      (scale) => _TopLevelScaleTween(begin: scale),
+    ) as _TopLevelScaleTween?;
+
+    _childTween = visitor(
+      _childTween,
+      widget.child,
+      (child) => _TopLevelChildTween(begin: child),
+    ) as _TopLevelChildTween?;
   }
 }
 
-class _TopLevelOpacityTween extends Tween<double> {
-  _TopLevelOpacityTween({double begin, double end})
+class _TopLevelOpacityTween extends Tween<double?> {
+  _TopLevelOpacityTween({double? begin, double? end})
       : super(begin: begin, end: end);
 
-  double lerp(double t) {
+  double? lerp(double t) {
     if (t < 1.0 / 3) {
       return lerpDouble(1.0, 0.0, t * 3);
     } else {
@@ -111,11 +114,11 @@ class _TopLevelOpacityTween extends Tween<double> {
   }
 }
 
-class _TopLevelScaleTween extends Tween<double> {
-  _TopLevelScaleTween({double begin, double end})
+class _TopLevelScaleTween extends Tween<double?> {
+  _TopLevelScaleTween({double? begin, double? end})
       : super(begin: begin, end: end);
 
-  double lerp(double t) {
+  double? lerp(double t) {
     if (t < 1.0 / 3) {
       return 1.0;
     } else {
@@ -124,11 +127,11 @@ class _TopLevelScaleTween extends Tween<double> {
   }
 }
 
-class _TopLevelChildTween extends Tween<Widget> {
-  _TopLevelChildTween({Widget begin, Widget end})
+class _TopLevelChildTween extends Tween<Widget?> {
+  _TopLevelChildTween({Widget? begin, Widget? end})
       : super(begin: begin, end: end);
 
-  Widget lerp(double t) {
+  Widget? lerp(double t) {
     if (t < 1.0 / 3) {
       return begin;
     } else {

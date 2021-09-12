@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:morpheus/morpheus.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.light();
+    const colorScheme = ColorScheme.light();
     return MaterialApp(
       theme: ThemeData(
         colorScheme: colorScheme,
         primaryColor: colorScheme.primary,
-        accentColor: colorScheme.secondary,
         scaffoldBackgroundColor: colorScheme.background,
       ),
       title: 'Morpheus example app',
@@ -19,35 +20,30 @@ class MyApp extends StatelessWidget {
         switch (settings.name) {
           case '/profile':
             return MorpheusPageRoute(
-              builder: (_) => ProfileScreen(),
+              builder: (_) => const ProfileScreen(),
               settings: settings,
             );
-            break;
           case '/settings':
             return MorpheusPageRoute(
               builder: (_) => SettingsScreen(),
               settings: settings,
             );
-            break;
           case '/settings/cookies':
             return MorpheusPageRoute(
-              builder: (_) => CookiesScreen(),
+              builder: (_) => const CookiesScreen(),
               settings: settings,
             );
-            break;
           case '/create':
             return MorpheusPageRoute(
-              builder: (_) => CreateScreen(),
+              builder: (_) => const CreateScreen(),
               settings: settings,
             );
-            break;
           case '/':
           default:
             return MorpheusPageRoute(
-              builder: (_) => HomeScreen(),
+              builder: (_) => const HomeScreen(),
               settings: settings,
             );
-            break;
         }
       },
     );
@@ -55,6 +51,8 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -70,24 +68,25 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: MorpheusTabView(
         child: <Widget>[
-          ProfileScreen(
+          const ProfileScreen(
             key: Key('profile'),
           ),
           SettingsScreen(
-            key: Key('settings'),
+            key: const Key('settings'),
           ),
         ][_currentIndex],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         key: createKey,
-        icon: Icon(Icons.add),
-        label: Text('Create'),
+        icon: const Icon(Icons.add),
+        label: const Text('Create'),
         onPressed: () => Navigator.of(context).pushNamed(
           '/create',
           arguments: MorpheusRouteArguments(
             parentKey: createKey,
-            transitionColor: Theme.of(context).accentColor,
+            transitionColor:
+                Theme.of(context).floatingActionButtonTheme.backgroundColor,
             borderRadius: BorderRadius.circular(24.0),
           ),
         ),
@@ -95,14 +94,14 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
-            title: Text('Profile'),
+            label: 'Profile',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            title: Text('Settings'),
+            label: 'Settings',
           ),
         ],
       ),
@@ -111,20 +110,20 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ProfileScreen extends StatelessWidget {
-  ProfileScreen({Key key}) : super(key: key);
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
     );
   }
 }
 
 class SettingsScreen extends StatelessWidget {
-  SettingsScreen({Key key}) : super(key: key);
+  SettingsScreen({Key? key}) : super(key: key);
 
   final cookiesKey = GlobalKey();
 
@@ -132,13 +131,13 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: const Text('Settings'),
       ),
       body: ListView(
         children: <Widget>[
           ListTile(
             key: cookiesKey,
-            title: Text('Cookies'),
+            title: const Text('Cookies'),
             onTap: () => Navigator.of(context).pushNamed(
               '/settings/cookies',
               arguments: MorpheusRouteArguments(
@@ -146,7 +145,7 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
           ),
-          Divider(height: 1.0),
+          const Divider(height: 1.0),
         ],
       ),
     );
@@ -154,9 +153,11 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class CreateScreen extends StatelessWidget {
+  const CreateScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -170,9 +171,11 @@ class CreateScreen extends StatelessWidget {
 }
 
 class CookiesScreen extends StatelessWidget {
+  const CookiesScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
